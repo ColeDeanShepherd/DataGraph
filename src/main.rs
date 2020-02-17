@@ -1,31 +1,21 @@
 use std::iter::Iterator;
+use std::error::Error;
 
-pub trait VecExt<T> {
-    fn remove_first<P>(&mut self, predicate: P) -> Option<T> where P: FnMut(&T) -> bool;
-}
-
-impl<T> VecExt<T> for Vec<T> {
-    #[inline]
-    fn remove_first<P>(&mut self, predicate: P) -> Option<T>
-    where P: FnMut(&T) -> bool
-    {
-        let index = self.iter().position(predicate);
-        match index {
-            Some(i) => Some(self.remove(i)),
-            None => None,
-        }
-    }
-}
+mod vec_ext;
+use vec_ext::VecExt;
 
 #[derive(Debug)]
 struct State {
     todos: Vec<ToDo>,
-    next_id: u64
+    next_id: u64,
 }
 
 impl State {
     fn new() -> State {
-        State { todos: Vec::new(), next_id: 1 }
+        State {
+            todos: Vec::new(),
+            next_id: 1,
+        }
     }
 }
 
@@ -33,14 +23,17 @@ impl State {
 struct ToDo {
     id: u64,
     description: String,
-    done: bool
+    done: bool,
 }
 
 impl State {
-    pub fn add_todo(&mut self, mut todo: ToDo) {
-        todo.id = self.next_id;
+    pub fn add_todo(&mut self, description: String, done: bool) {
+        self.todos.push(ToDo {
+            id: self.next_id,
+            description: description,
+            done: done,
+        });
         self.next_id += 1;
-        self.todos.push(todo);
     }
     pub fn remove_todo(&mut self, id: u64) -> Option<ToDo> {
         self.todos.remove_first(|t| t.id == id)
@@ -51,8 +44,8 @@ impl State {
             Some(t) => {
                 t.done = true;
                 Ok(())
-            },
-            None => Err("Nonexistent todo")
+            }
+            None => Err("Nonexistent todo"),
         }
     }
     pub fn uncomplete_todo(&mut self, id: u64) -> Result<(), &str> {
@@ -61,24 +54,26 @@ impl State {
             Some(t) => {
                 t.done = false;
                 Ok(())
-            },
-            None => Err("Nonexistent todo")
+            }
+            None => Err("Nonexistent todo"),
         }
     }
 }
 
-fn main() {
+fn main() -> Result<(), Box<dyn Error>> {
     let mut state = State::new();
 
-    state.add_todo(ToDo { id: 0, description: String::from("todo 1"), done: false });
-    state.add_todo(ToDo { id: 0, description: String::from("todo 2"), done: true });
-    state.add_todo(ToDo { id: 0, description: String::from("todo 3"), done: true });
+    state.add_todo(String::from("todo 1"), false);
+    state.add_todo(String::from("todo 2"), true);
+    state.add_todo(String::from("todo 3"), true);
 
-    state.complete_todo(1).unwrap();
-    state.uncomplete_todo(2).unwrap();
+    state.complete_todo(1)?;
+    state.uncomplete_todo(2)?;
 
     let x = state.remove_todo(3);
 
     println!("{:?}", state);
     println!("{:?}", x);
+
+    Ok(())
 }
