@@ -28,6 +28,12 @@ struct ToDo {
     done: bool,
 }
 
+impl Clone for ToDo {
+    fn clone(&self) -> Self {
+        ToDo { id: self.id, description: self.description.clone(), done: self.done }
+    }
+}
+
 impl State {
     pub fn add_todo(&mut self, description: String, done: bool) {
         self.todos.push(ToDo {
@@ -62,7 +68,70 @@ impl State {
     }
 }
 
-fn todo_main() -> Result<(), Box<dyn Error>> {
+// Yew example app
+use yew::prelude::*;
+
+struct Model {
+    link: ComponentLink<Self>,
+    props: ModelProps
+}
+
+#[derive(Properties)]
+struct ModelProps {
+    #[props(required)]
+    todos: Vec<ToDo>
+}
+
+impl Clone for ModelProps {
+    fn clone(&self) -> Self {
+        ModelProps { todos: self.todos.clone() }
+    }
+}
+
+enum Msg {}
+
+impl Component for Model {
+    type Message = Msg;
+    type Properties = ModelProps;
+
+    fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
+        Model { link, props }
+    }
+
+    fn update(&mut self, msg: Self::Message) -> ShouldRender {
+        true
+    }
+
+    fn view(&self) -> Html {
+        html! {
+            <table>
+                <thead>
+                    <tr>
+                        <th>{ "ID" }</th>
+                        <th>{ "Description" }</th>
+                        <th>{ "Done" }</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    { for self.props.todos.iter().map(render_todo) }
+                </tbody>
+            </table>
+        }
+    }
+}
+
+fn render_todo(todo: &ToDo) -> Html {
+    html! {
+        <tr>
+            <td><input type="text" value=todo.id /></td>
+            <td><input type="text" value=todo.description /></td>
+            <td><input type="text" value=todo.done /></td>
+        </tr>
+    }
+}
+
+fn yew_main() -> Result<(), Box<dyn Error>> {
     let mut state = State::new();
 
     state.add_todo(String::from("todo 1"), false);
@@ -77,52 +146,9 @@ fn todo_main() -> Result<(), Box<dyn Error>> {
     println!("{:?}", state);
     println!("{:?}", x);
 
+    yew::start_app_with_props::<Model>(ModelProps { todos: state.todos.clone() });
+    
     Ok(())
-}
-
-// Yew example app
-use yew::{html, Callback, ClickEvent, Component, ComponentLink, Html, ShouldRender};
-
-struct App {
-    clicked: bool,
-    onclick: Callback<ClickEvent>,
-}
-
-enum Msg {
-    Click,
-}
-
-impl Component for App {
-    type Message = Msg;
-    type Properties = ();
-
-    fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
-        App {
-            clicked: false,
-            onclick: link.callback(|_| Msg::Click),
-        }
-    }
-
-    fn update(&mut self, msg: Self::Message) -> ShouldRender {
-        match msg {
-            Msg::Click => {
-                self.clicked = true;
-                true // Indicate that the Component should re-render
-            }
-        }
-    }
-
-    fn view(&self) -> Html {
-        let button_text = if self.clicked { "Clicked!" } else { "Click me!" };
-
-        html! {
-            <button onclick=&self.onclick>{ button_text }</button>
-        }
-    }
-}
-
-fn yew_main() {
-    yew::start_app::<App>();
 }
 
 
@@ -130,5 +156,5 @@ fn yew_main() {
 
 // Actual main
 fn main() {
-    yew_main();
+    yew_main().unwrap();
 }

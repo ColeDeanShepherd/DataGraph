@@ -7,6 +7,8 @@
 ## Low-Priority
 
 * Use wasm-pack
+* Investigate using PartialEq for performance improvements. See https://yew.rs/docs/advanced-topics/optimizations
+* Stop copying global state
 
 ## Long-Term
 
