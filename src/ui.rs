@@ -6,7 +6,8 @@ use crate::logic::*;
 
 pub struct Model {
     link: ComponentLink<Self>,
-    props: ModelProps
+    props: ModelProps,
+    add_todo: Callback<ClickEvent>
 }
 
 #[derive(Clone, Properties)]
@@ -15,18 +16,35 @@ pub struct ModelProps {
     state: State
 }
 
-pub enum Msg {}
+pub enum Msg {
+    AddTodo,
+    RemoveTodo { id: u64 }
+}
 
 impl Component for Model {
     type Message = Msg;
     type Properties = ModelProps;
 
     fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
-        Model { link, props }
+        Model {
+            props,
+            add_todo: link.callback(|_| Msg::AddTodo),
+            link
+        }
     }
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
-        true
+        match msg {
+            Msg::AddTodo => {
+                self.props.state.add_todo(String::from(""), false);
+                true
+            },
+            Msg::RemoveTodo { id } => {
+                self.props.state.remove_todo(id);
+                true
+            }
+        }
+
     }
 
     fn view(&self) -> Html {
@@ -43,23 +61,27 @@ impl Component for Model {
                     </thead>
 
                     <tbody>
-                        { for self.props.state.todos.iter().map(render_todo) }
+                        { for self.props.state.todos.iter().map(|todo| self.render_todo(todo)) }
                     </tbody>
                 </table>
-                <button>{ "+" }</button>
+                <button onclick=&self.add_todo>{ "+" }</button>
             </>
         }
     }
 }
 
-fn render_todo(todo: &ToDo) -> Html {
-    html! {
-        <tr>
-            <td><input type="text" value=todo.id /></td>
-            <td><input type="text" value=todo.description /></td>
-            <td><input type="text" value=todo.done /></td>
-            <td><button>{ "-" }</button></td>
-        </tr>
+impl Model {
+    fn render_todo(&self, todo: &ToDo) -> Html {
+        let id = todo.id;
+
+        html! {
+            <tr>
+                <td><input type="text" value=todo.id /></td>
+                <td><input type="text" value=todo.description /></td>
+                <td><input type="text" value=todo.done /></td>
+                <td><button onclick=self.link.callback(move |_| Msg::RemoveTodo { id: id })>{ "-" }</button></td>
+            </tr>
+        }
     }
 }
 
