@@ -1,6 +1,6 @@
 use crate::vec_ext::*;
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct State {
     pub todos: Vec<ToDo>,
     next_id: u64,

@@ -9,16 +9,10 @@ pub struct Model {
     props: ModelProps
 }
 
-#[derive(Properties)]
+#[derive(Clone, Properties)]
 pub struct ModelProps {
     #[props(required)]
-    todos: Vec<ToDo>
-}
-
-impl Clone for ModelProps {
-    fn clone(&self) -> Self {
-        ModelProps { todos: self.todos.clone() }
-    }
+    state: State
 }
 
 pub enum Msg {}
@@ -49,7 +43,7 @@ impl Component for Model {
                     </thead>
 
                     <tbody>
-                        { for self.props.todos.iter().map(render_todo) }
+                        { for self.props.state.todos.iter().map(render_todo) }
                     </tbody>
                 </table>
                 <button>{ "+" }</button>
@@ -84,7 +78,7 @@ pub fn yew_main() -> Result<(), Box<dyn Error>> {
     println!("{:?}", state);
     println!("{:?}", x);
 
-    yew::start_app_with_props::<Model>(ModelProps { todos: state.todos.clone() });
+    yew::start_app_with_props::<Model>(ModelProps { state: state });
     
     Ok(())
 }
