@@ -1,5 +1,8 @@
 use std::prelude::v1::*;
 use std::error::Error;
+
+use serde_json;
+
 use yew::prelude::*;
 
 use crate::logic::*;
@@ -58,6 +61,8 @@ impl Component for Model {
     }
 
     fn view(&self) -> Html {
+        let serialized_state = serde_json::to_string(&self.props.state).unwrap();
+
         html! {
             <>
                 <table>
@@ -75,6 +80,8 @@ impl Component for Model {
                     </tbody>
                 </table>
                 <button onclick=&self.add_todo>{ "+" }</button>
+                <br />
+                <textarea value=serialized_state></textarea>
             </>
         }
     }

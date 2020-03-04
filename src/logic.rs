@@ -1,6 +1,8 @@
+use serde::{Serialize, Deserialize};
+
 use crate::vec_ext::*;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct State {
     pub todos: Vec<ToDo>,
     next_id: u64,
@@ -15,7 +17,7 @@ impl State {
     }
 }
 
-#[derive(Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct ToDo {
     pub id: u64,
     pub description: String,
