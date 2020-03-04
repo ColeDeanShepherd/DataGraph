@@ -37,24 +37,27 @@ impl State {
         });
         self.next_id += 1;
     }
+
     pub fn remove_todo(&mut self, id: u64) -> Option<ToDo> {
         self.todos.remove_first(|t| t.id == id)
     }
-    pub fn complete_todo(&mut self, id: u64) -> Result<(), &str> {
+
+    pub fn set_todo_description(&mut self, id: u64, new_value: String) -> Result<(), &str> {
         let todo = self.todos.iter_mut().find(|t| t.id == id);
         match todo {
             Some(t) => {
-                t.done = true;
+                t.description = new_value;
                 Ok(())
             }
             None => Err("Nonexistent todo"),
         }
     }
-    pub fn uncomplete_todo(&mut self, id: u64) -> Result<(), &str> {
+
+    pub fn set_todo_done(&mut self, id: u64, new_value: bool) -> Result<(), &str> {
         let todo = self.todos.iter_mut().find(|t| t.id == id);
         match todo {
             Some(t) => {
-                t.done = false;
+                t.done = new_value;
                 Ok(())
             }
             None => Err("Nonexistent todo"),

@@ -18,7 +18,9 @@ pub struct ModelProps {
 
 pub enum Msg {
     AddTodo,
-    RemoveTodo { id: u64 }
+    RemoveTodo { id: u64 },
+    ChangeDescription { id: u64, new_value: String },
+    ChangeDone { id: u64, new_value: bool }
 }
 
 impl Component for Model {
@@ -41,6 +43,14 @@ impl Component for Model {
             },
             Msg::RemoveTodo { id } => {
                 self.props.state.remove_todo(id);
+                true
+            },
+            Msg::ChangeDescription { id, new_value } => {
+                self.props.state.set_todo_description(id, new_value).unwrap();
+                true
+            },
+            Msg::ChangeDone { id, new_value } => {
+                self.props.state.set_todo_done(id, new_value).unwrap();
                 true
             }
         }
@@ -73,13 +83,18 @@ impl Component for Model {
 impl Model {
     fn render_todo(&self, todo: &ToDo) -> Html {
         let id = todo.id;
+        let done = todo.done;
+
+        let change_description = self.link.callback(move |e: InputData| Msg::ChangeDescription { id: id, new_value: e.value });
+        let toggle_done = self.link.callback(move |_| Msg::ChangeDone { id: id, new_value: !done });
+        let remove_todo = self.link.callback(move |_| Msg::RemoveTodo { id: id });
 
         html! {
             <tr>
-                <td><input type="text" value=todo.id /></td>
-                <td><input type="text" value=todo.description /></td>
-                <td><input type="text" value=todo.done /></td>
-                <td><button onclick=self.link.callback(move |_| Msg::RemoveTodo { id: id })>{ "-" }</button></td>
+                <td><input type="text" value=todo.id disabled=true /></td>
+                <td><input type="text" value=todo.description oninput=change_description /></td>
+                <td><input type="checkbox" checked=done onclick=toggle_done /></td>
+                <td><button onclick=remove_todo>{ "-" }</button></td>
             </tr>
         }
     }
@@ -92,8 +107,8 @@ pub fn yew_main() -> Result<(), Box<dyn Error>> {
     state.add_todo(String::from("todo 2"), true);
     state.add_todo(String::from("todo 3"), true);
 
-    state.complete_todo(1)?;
-    state.uncomplete_todo(2)?;
+    state.set_todo_done(1, true)?;
+    state.set_todo_done(2, false)?;
 
     let x = state.remove_todo(3);
 
