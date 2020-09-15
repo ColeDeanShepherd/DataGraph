@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { ToDoAppState, changeToDoItemDescription, completeToDoItem, uncompleteToDoItem, removeToDoItem, addToDoItem } from '../../ToDoApp';
+import { ToDoAppState, changeToDoItemDescription, completeToDoItem, uncompleteToDoItem, removeToDoItem, addToDoItem, ToDoItemSchema } from '../../ToDoApp';
 
 import './App.css';
+import { BooleanEditor } from './BooleanEditor';
+import { StringEditor } from './StringEditor';
 
 const appState: ToDoAppState = {
   toDoItems: []
@@ -26,35 +28,32 @@ function App() {
       <table>
         <thead>
           <tr>
-            <th>Task</th>
-            <th>Done</th>
-            <th></th>
+            {ToDoItemSchema.map(cd => <th>{cd.name}</th>)}
           </tr>
         </thead>
         <tbody>
           <tr>
             <td>
-              <input
-              type="text"
-              placeholder="Enter a to-do"
-              value={newToDoItemDescription}
-              onChange={event => setNewToDoItemDescription(event.target.value)} />
+              <StringEditor
+                placeholder="Enter a to-do"
+                value={newToDoItemDescription}
+                onChange={newValue => setNewToDoItemDescription(newValue)} />
             </td>
-            <td><input type="checkbox" disabled={true} /></td>
+            <td>
+              <BooleanEditor
+                value={false}
+                disabled={true} />
+            </td>
             <td><button onClick={onAddToDoItem} disabled={newToDoItemDescription.length === 0}>+</button></td>
           </tr>
           {appState.toDoItems.map(item => {
-            const onDescriptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-              const newDescription = event.target.value;
-
+            const onDescriptionChange = (newDescription: string) => {
               changeToDoItemDescription(appState, item.id, newDescription);
               forceUpdate();
             };
 
-            const onIsDoneChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-              const isDone = event.target.checked;
-
-              if (isDone) {
+            const onIsDoneChange = (newIsDone: boolean) => {
+              if (newIsDone) {
                 completeToDoItem(appState, item.id);
               } else {
                 uncompleteToDoItem(appState, item.id);
@@ -70,8 +69,8 @@ function App() {
 
             return (
               <tr>
-                <td><input type="text" value={item.description} onChange={onDescriptionChange} /></td>
-                <td><input type="checkbox" checked={item.isDone} onChange={onIsDoneChange} /></td>
+                <td><StringEditor value={item.description} onChange={onDescriptionChange} /></td>
+                <td><BooleanEditor value={item.isDone} onChange={onIsDoneChange} /></td>
                 <td><button onClick={onRemove}>x</button></td>
               </tr>
             );

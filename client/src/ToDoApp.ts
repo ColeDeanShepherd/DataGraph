@@ -1,10 +1,27 @@
+import { DataTypeKind } from "./core/DataType";
 import { panic } from "./core/Error";
+import { ColumnDefinition } from './core/ColumnDefinition';
 
 export interface ToDoItem {
   id: number;
   description: string;
   isDone: boolean;
 }
+
+export const ToDoItemSchema: Array<ColumnDefinition> = [
+  {
+    name: "description",
+    type: {
+      kind: DataTypeKind.String
+    }
+  },
+  {
+    name: "isDone",
+    type: {
+      kind: DataTypeKind.Boolean
+    }
+  }
+];
 
 export interface ToDoAppState {
   toDoItems: Array<ToDoItem>;
