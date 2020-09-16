@@ -1,6 +1,5 @@
 # DataGraph To-Do List
 * To-do list app
-  * non-hard-coded-ui (based on data schema)
   * client-side persistence
   * multi-user editing
   * change-tracking
