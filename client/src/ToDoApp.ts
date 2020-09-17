@@ -1,26 +1,20 @@
-import { DataTypeKind } from "./core/DataType";
+import { BooleanDataType, StringDataType } from "./core/DataType";
 import { Table } from "./core/Table";
+import { Database, createDatabase, applyAddTableAction, DatabaseActionKind } from './core/Database';
 
-export interface ToDoItem {
-  id: number;
-  description: string;
-  isDone: boolean;
-}
+export const toDosDatabase: Database = createDatabase();
 
-export const toDosTable: Table = {
+export const toDosTable: Table = applyAddTableAction(toDosDatabase, {
+  kind: DatabaseActionKind.AddTable,
+  name: "To-Dos",
   columnDefinitions: [
     {
       name: "description",
-      type: {
-        kind: DataTypeKind.String
-      }
+      type: StringDataType
     },
     {
       name: "isDone",
-      type: {
-        kind: DataTypeKind.Boolean
-      }
+      type: BooleanDataType
     }
-  ],
-  rows: []
-};
+  ]
+});

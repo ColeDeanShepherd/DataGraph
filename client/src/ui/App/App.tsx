@@ -1,5 +1,5 @@
 import React from 'react';
-import { toDosTable } from '../../ToDoApp';
+import { toDosTable, toDosDatabase } from '../../ToDoApp';
 
 import './App.css';
 import { TableEditor } from "./TableEditor";
@@ -7,7 +7,7 @@ import { TableEditor } from "./TableEditor";
 function App() {
   return (
     <div className="App">
-      <TableEditor table={toDosTable} />
+      <TableEditor database={toDosDatabase} table={toDosTable} />
     </div>
   );
 }

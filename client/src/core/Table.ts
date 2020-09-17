@@ -2,6 +2,8 @@ import { ColumnDefinition } from "./ColumnDefinition";
 import { getDefaultValue } from './DataType';
 
 export interface Table {
+  id: number;
+  name: string;
   columnDefinitions: Array<ColumnDefinition>;
   rows: Array<Array<any>>;
 }
