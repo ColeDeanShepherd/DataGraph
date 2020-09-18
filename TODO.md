@@ -1,6 +1,5 @@
 # DataGraph To-Do List
 * To-do list app
-  * client-side persistence
   * multi-user editing
   * change-tracking
   * refactoring

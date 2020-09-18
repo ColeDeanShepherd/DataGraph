@@ -4,17 +4,39 @@ import { panic } from "./Error";
 import { ColumnDefinition } from "./ColumnDefinition";
 import { Table } from "./Table";
 import { isIndexValid, removeElementWithCheckedIndex } from './Array';
+import { ILocalStorage, LocalStorage } from './LocalStorage';
+import { unwrap } from "./Util";
 
 export interface Database {
+  id: number;
   tables: Array<Table>;
   nextTableId: number;
 }
 
-export function createDatabase(): Database {
+export interface DatabaseServer {
+  localStorage: ILocalStorage;
+  database: Database;
+}
+
+export function createDatabaseServer(id: number): DatabaseServer {
+  // try to load the database
+  const localStorage = LocalStorage;
+  const database = loadDatabase(id, localStorage);
+
   return {
-    tables: [],
-    nextTableId: 1
+    localStorage: LocalStorage,
+    database: (database !== undefined)
+      ? database
+      : {
+        id: id,
+        tables: [],
+        nextTableId: 1
+      }
   };
+}
+
+export function getDatabaseTableByName(databaseServer: DatabaseServer, tableName: string): Table | undefined {
+  return databaseServer.database.tables.find(t => t.name === tableName);
 }
 
 export enum DatabaseActionKind {
@@ -28,9 +50,49 @@ export interface DatabaseAction {
   kind: DatabaseActionKind;
 }
 
+export function applyDatabaseAction(databaseServer: DatabaseServer, action: DatabaseAction) {
+  switch (action.kind) {
+    case DatabaseActionKind.AddTable:
+      applyAddTableAction(databaseServer, action as AddTableAction);
+      break;
+    case DatabaseActionKind.AddTableRow:
+      applyAddTableRowAction(databaseServer, action as AddTableRowAction);
+      break;
+    case DatabaseActionKind.RemoveTableRow:
+      applyRemoveTableRowAction(databaseServer, action as RemoveTableRowAction);
+      break;
+    case DatabaseActionKind.ChangeTableCell:
+      applyChangeTableCellAction(databaseServer, action as ChangeTableCellAction);
+      break;
+    default:
+      panic(`Unknown DatabaseActionKind: ${action.kind}`);
+  }
+
+  saveDatabase(databaseServer);
+}
+
 export interface AddTableAction extends DatabaseAction {
   name: string;
   columnDefinitions: Array<ColumnDefinition>;
+}
+
+function applyAddTableAction(databaseServer: DatabaseServer, action: AddTableAction): Table {
+  // create table
+  const table: Table = {
+    id: databaseServer.database.nextTableId,
+    name: action.name,
+    columnDefinitions: _.cloneDeep(action.columnDefinitions),
+    rows: []
+  };
+
+  // add row to table
+  databaseServer.database.tables.push(table);
+
+  // increment next table's ID
+  databaseServer.database.nextTableId++;
+
+  // return the table
+  return table;
 }
 
 export interface AddTableRowAction extends DatabaseAction {
@@ -38,59 +100,9 @@ export interface AddTableRowAction extends DatabaseAction {
   row: Array<any>;
 }
 
-export interface RemoveTableRowAction extends DatabaseAction {
-  tableId: number;
-  rowIndex: number;
-}
-
-export interface ChangeTableCellAction extends DatabaseAction {
-  tableId: number;
-  rowIndex: number;
-  columnIndex: number;
-  value: any;
-}
-
-export function applyDatabaseAction(database: Database, action: DatabaseAction) {
-  switch (action.kind) {
-    case DatabaseActionKind.AddTable:
-      applyAddTableAction(database, action as AddTableAction);
-      break;
-    case DatabaseActionKind.AddTableRow:
-      applyAddTableRowAction(database, action as AddTableRowAction);
-      break;
-    case DatabaseActionKind.RemoveTableRow:
-      applyRemoveTableRowAction(database, action as RemoveTableRowAction);
-      break;
-    case DatabaseActionKind.ChangeTableCell:
-      applyChangeTableCellAction(database, action as ChangeTableCellAction);
-      break;
-    default:
-      panic(`Unknown DatabaseActionKind: ${action.kind}`);
-  }
-}
-
-export function applyAddTableAction(database: Database, action: AddTableAction): Table {
-  // create table
-  const table: Table = {
-    id: database.nextTableId,
-    name: action.name,
-    columnDefinitions: _.cloneDeep(action.columnDefinitions),
-    rows: []
-  };
-
-  // add row to table
-  database.tables.push(table);
-
-  // increment next table's ID
-  database.nextTableId++;
-
-  // return the table
-  return table;
-}
-
-export function applyAddTableRowAction(database: Database, action: AddTableRowAction): Array<any> {
+function applyAddTableRowAction(databaseServer: DatabaseServer, action: AddTableRowAction): Array<any> {
   // find table
-  const table = database.tables.find(t => t.id === action.tableId);
+  const table = databaseServer.database.tables.find(t => t.id === action.tableId);
   if (!table) {
     panic(`Couldn't find table with ID ${action.tableId}.`);
     return [];
@@ -106,9 +118,14 @@ export function applyAddTableRowAction(database: Database, action: AddTableRowAc
   return row;
 }
 
-export function applyRemoveTableRowAction(database: Database, action: RemoveTableRowAction) {
+export interface RemoveTableRowAction extends DatabaseAction {
+  tableId: number;
+  rowIndex: number;
+}
+
+function applyRemoveTableRowAction(databaseServer: DatabaseServer, action: RemoveTableRowAction) {
   // find table
-  const table = database.tables.find(t => t.id === action.tableId);
+  const table = databaseServer.database.tables.find(t => t.id === action.tableId);
   if (!table) {
     panic(`Couldn't find table with ID ${action.tableId}.`);
     return;
@@ -124,9 +141,16 @@ export function applyRemoveTableRowAction(database: Database, action: RemoveTabl
   removeElementWithCheckedIndex(table.rows, action.rowIndex);
 }
 
-export function applyChangeTableCellAction(database: Database, action: ChangeTableCellAction) {
+export interface ChangeTableCellAction extends DatabaseAction {
+  tableId: number;
+  rowIndex: number;
+  columnIndex: number;
+  value: any;
+}
+
+function applyChangeTableCellAction(databaseServer: DatabaseServer, action: ChangeTableCellAction) {
   // find table
-  const table = database.tables.find(t => t.id === action.tableId);
+  const table = databaseServer.database.tables.find(t => t.id === action.tableId);
   if (!table) {
     panic(`Couldn't find table with ID ${action.tableId}.`);
     return;
@@ -146,4 +170,43 @@ export function applyChangeTableCellAction(database: Database, action: ChangeTab
 
   // Change value of cell. Copy value so caller can't change it through a reference.
   table.rows[action.rowIndex][action.columnIndex] = _.cloneDeep(action.value);
+}
+
+function databaseIdToLocalStorageKey(id: number): string {
+  return `db.${id}`;
+}
+
+function saveDatabase(databaseServer: DatabaseServer) {
+  const key = databaseIdToLocalStorageKey(databaseServer.database.id);
+  const value = JSON.stringify(databaseServer.database);
+  databaseServer.localStorage.setItem(key, value);
+}
+
+function loadDatabase(databaseId: number, localStorage: ILocalStorage): Database | undefined {
+  const key = databaseIdToLocalStorageKey(databaseId);
+  const value = localStorage.getItem(key);
+  if (value !== null) {
+    const database = JSON.parse(value);
+    return database;
+  } else {
+    return undefined;
+  }
+}
+
+export function getOrCreateDatabaseTableByName(
+  databaseServer: DatabaseServer,
+  name: string,
+  columnDefinitions: Array<ColumnDefinition>
+): Table {
+  let table = getDatabaseTableByName(databaseServer, name);
+  if (table !== undefined) { return table; }
+
+  applyDatabaseAction(databaseServer, {
+    kind: DatabaseActionKind.AddTable,
+    name: name,
+    columnDefinitions: columnDefinitions
+  } as AddTableAction);
+  
+  table = unwrap(getDatabaseTableByName(databaseServer, name));
+  return table;
 }

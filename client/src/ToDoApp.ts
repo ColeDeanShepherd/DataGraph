@@ -1,13 +1,17 @@
 import { BooleanDataType, StringDataType } from "./core/DataType";
 import { Table } from "./core/Table";
-import { Database, createDatabase, applyAddTableAction, DatabaseActionKind } from './core/Database';
+import { getOrCreateDatabaseTableByName } from './core/Database';
+import {
+  createDatabaseServer,
+  DatabaseServer,
+} from './core/Database';
 
-export const toDosDatabase: Database = createDatabase();
+export const toDosDatabase: DatabaseServer = createDatabaseServer(/*id*/ 1);
 
-export const toDosTable: Table = applyAddTableAction(toDosDatabase, {
-  kind: DatabaseActionKind.AddTable,
-  name: "To-Dos",
-  columnDefinitions: [
+export const toDosTable: Table = getOrCreateDatabaseTableByName(
+  toDosDatabase,
+  "To-Dos",
+  [
     {
       name: "description",
       type: StringDataType
@@ -17,4 +21,4 @@ export const toDosTable: Table = applyAddTableAction(toDosDatabase, {
       type: BooleanDataType
     }
   ]
-});
+);

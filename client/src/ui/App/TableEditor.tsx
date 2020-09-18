@@ -5,20 +5,26 @@ import { DataTypeKind } from "../../core/DataType";
 import { StringEditor } from "./StringEditor";
 import { useForceUpdate } from "./Util";
 import { BooleanEditor } from "./BooleanEditor";
-import { removeElementWithCheckedIndex } from "../../core/Array";
-import { applyAddTableRowAction, Database, DatabaseActionKind, applyRemoveTableRowAction, applyChangeTableCellAction } from '../../core/Database';
+import {
+  DatabaseActionKind,
+  AddTableRowAction,
+  applyDatabaseAction,
+  RemoveTableRowAction,
+  ChangeTableCellAction,
+  DatabaseServer
+} from '../../core/Database';
 
-export function TableEditor(props: { database: Database, table: Table }) {
+export function TableEditor(props: { database: DatabaseServer, table: Table }) {
   const { database, table } = props;
   
   const forceUpdate = useForceUpdate();
 
   const onAddRow = () => {
-    applyAddTableRowAction(database, {
+    applyDatabaseAction(database, {
       kind: DatabaseActionKind.AddTableRow,
       tableId: table.id,
       row: createDefaultRow(table)
-    });
+    } as AddTableRowAction);
     forceUpdate();
   };
 
@@ -28,18 +34,18 @@ export function TableEditor(props: { database: Database, table: Table }) {
       <table>
         <thead>
           <tr>
-            {table.columnDefinitions.map(cd => <th>{cd.name}</th>)}
+            {table.columnDefinitions.map(cd => <th key={cd.name}>{cd.name}</th>)}
             <th></th>
           </tr>
         </thead>
         <tbody>
           {table.rows.map((row, rowIndex) => {
             const onRemove = () => {
-              applyRemoveTableRowAction(database, {
+              applyDatabaseAction(database, {
                 kind: DatabaseActionKind.RemoveTableRow,
                 tableId: table.id,
                 rowIndex: rowIndex
-              });
+              } as RemoveTableRowAction);
               forceUpdate();
             };
 
@@ -49,13 +55,13 @@ export function TableEditor(props: { database: Database, table: Table }) {
                   const columnDefinition = table.columnDefinitions[colIndex];
                   
                   const onValueChange = (newValue: any) => {
-                    applyChangeTableCellAction(database, {
+                    applyDatabaseAction(database, {
                       kind: DatabaseActionKind.ChangeTableCell,
                       tableId: table.id,
                       rowIndex: rowIndex,
                       columnIndex: colIndex,
                       value: newValue
-                    });
+                    } as ChangeTableCellAction);
                     forceUpdate();
                   };
 
@@ -73,7 +79,7 @@ export function TableEditor(props: { database: Database, table: Table }) {
             );
           })}
           <tr>
-            {table.columnDefinitions.map(cd => <td></td>)}
+            {table.columnDefinitions.map(cd => <td key={cd.name}></td>)}
             <td><button onClick={onAddRow}>+</button></td>
           </tr>
         </tbody>
