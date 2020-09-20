@@ -9,8 +9,16 @@ import { unwrap } from "./Util";
 
 export interface Database {
   id: number;
+
+  changeHistory: Array<DatabaseChange>;
+
   tables: Array<Table>;
   nextTableId: number;
+}
+
+export interface DatabaseChange {
+  action: DatabaseAction;
+  dateTime: Date;
 }
 
 export interface DatabaseServer {
@@ -29,6 +37,9 @@ export function createDatabaseServer(id: number): DatabaseServer {
       ? database
       : {
         id: id,
+
+        changeHistory: [],
+
         tables: [],
         nextTableId: 1
       }
@@ -51,6 +62,11 @@ export interface DatabaseAction {
 }
 
 export function applyDatabaseAction(databaseServer: DatabaseServer, action: DatabaseAction) {
+  databaseServer.database.changeHistory.push({
+    action: action,
+    dateTime: new Date()
+  });
+
   switch (action.kind) {
     case DatabaseActionKind.AddTable:
       applyAddTableAction(databaseServer, action as AddTableAction);
@@ -186,7 +202,11 @@ function loadDatabase(databaseId: number, localStorage: ILocalStorage): Database
   const key = databaseIdToLocalStorageKey(databaseId);
   const value = localStorage.getItem(key);
   if (value !== null) {
-    const database = JSON.parse(value);
+    const database: Database = JSON.parse(value);
+
+    if (!database.changeHistory) { database.changeHistory = []; }
+    if (!database.tables) { database.tables = []; }
+
     return database;
   } else {
     return undefined;

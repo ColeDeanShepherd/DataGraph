@@ -1,6 +1,5 @@
 # DataGraph To-Do List
 * To-do list app
-  * change-tracking
   * multi-user editing
   * refactoring
 
