@@ -1,7 +1,7 @@
 # DataGraph To-Do List
 * To-do list app
-  * multi-user editing
   * change-tracking
+  * multi-user editing
   * refactoring
 
 # Test Apps
