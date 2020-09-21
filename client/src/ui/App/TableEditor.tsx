@@ -5,22 +5,21 @@ import { DataTypeKind } from "../../core/DataType";
 import { StringEditor } from "./StringEditor";
 import { useForceUpdate } from "./Util";
 import { BooleanEditor } from "./BooleanEditor";
+import { MockApiClient } from '../../core/ApiClient';
 import {
   DatabaseActionKind,
   AddTableRowAction,
-  applyDatabaseAction,
   RemoveTableRowAction,
   ChangeTableCellAction,
-  DatabaseServer
 } from '../../core/Database';
 
-export function TableEditor(props: { database: DatabaseServer, table: Table }) {
-  const { database, table } = props;
+export function TableEditor(props: { apiClient: MockApiClient, table: Table }) {
+  const { apiClient, table } = props;
   
   const forceUpdate = useForceUpdate();
 
   const onAddRow = () => {
-    applyDatabaseAction(database, {
+    apiClient.applyActionAsync({
       kind: DatabaseActionKind.AddTableRow,
       tableId: table.id,
       row: createDefaultRow(table)
@@ -41,7 +40,7 @@ export function TableEditor(props: { database: DatabaseServer, table: Table }) {
         <tbody>
           {table.rows.map((row, rowIndex) => {
             const onRemove = () => {
-              applyDatabaseAction(database, {
+              apiClient.applyActionAsync({
                 kind: DatabaseActionKind.RemoveTableRow,
                 tableId: table.id,
                 rowIndex: rowIndex
@@ -55,7 +54,7 @@ export function TableEditor(props: { database: DatabaseServer, table: Table }) {
                   const columnDefinition = table.columnDefinitions[colIndex];
                   
                   const onValueChange = (newValue: any) => {
-                    applyDatabaseAction(database, {
+                    apiClient.applyActionAsync({
                       kind: DatabaseActionKind.ChangeTableCell,
                       tableId: table.id,
                       rowIndex: rowIndex,

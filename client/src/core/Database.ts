@@ -26,28 +26,8 @@ export interface DatabaseServer {
   database: Database;
 }
 
-export function createDatabaseServer(id: number): DatabaseServer {
-  // try to load the database
-  const localStorage = LocalStorage;
-  const database = loadDatabase(id, localStorage);
-
-  return {
-    localStorage: LocalStorage,
-    database: (database !== undefined)
-      ? database
-      : {
-        id: id,
-
-        changeHistory: [],
-
-        tables: [],
-        nextTableId: 1
-      }
-  };
-}
-
-export function getDatabaseTableByName(databaseServer: DatabaseServer, tableName: string): Table | undefined {
-  return databaseServer.database.tables.find(t => t.name === tableName);
+export function getDatabaseTableByName(database: Database, tableName: string): Table | undefined {
+  return database.tables.find(t => t.name === tableName);
 }
 
 export enum DatabaseActionKind {
@@ -211,22 +191,4 @@ function loadDatabase(databaseId: number, localStorage: ILocalStorage): Database
   } else {
     return undefined;
   }
-}
-
-export function getOrCreateDatabaseTableByName(
-  databaseServer: DatabaseServer,
-  name: string,
-  columnDefinitions: Array<ColumnDefinition>
-): Table {
-  let table = getDatabaseTableByName(databaseServer, name);
-  if (table !== undefined) { return table; }
-
-  applyDatabaseAction(databaseServer, {
-    kind: DatabaseActionKind.AddTable,
-    name: name,
-    columnDefinitions: columnDefinitions
-  } as AddTableAction);
-  
-  table = unwrap(getDatabaseTableByName(databaseServer, name));
-  return table;
 }

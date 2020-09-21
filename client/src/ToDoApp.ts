@@ -1,24 +1,25 @@
 import { BooleanDataType, StringDataType } from "./core/DataType";
-import { Table } from "./core/Table";
-import { getOrCreateDatabaseTableByName } from './core/Database';
-import {
-  createDatabaseServer,
-  DatabaseServer,
-} from './core/Database';
+import { getOrCreateDatabaseTableByNameAsync, MockApiClient } from './core/ApiClient';
+import { Database } from "./core/Database";
 
-export const toDosDatabase: DatabaseServer = createDatabaseServer(/*id*/ 1);
+export const toDosApiClient = new MockApiClient();
 
-export const toDosTable: Table = getOrCreateDatabaseTableByName(
-  toDosDatabase,
-  "To-Dos",
-  [
-    {
-      name: "description",
-      type: StringDataType
-    },
-    {
-      name: "isDone",
-      type: BooleanDataType
-    }
-  ]
-);
+export async function initToDosDatabase(): Promise<Database> {
+  await getOrCreateDatabaseTableByNameAsync(
+    toDosApiClient,
+    "To-Dos",
+    [
+      {
+        name: "description",
+        type: StringDataType
+      },
+      {
+        name: "isDone",
+        type: BooleanDataType
+      }
+    ]
+  );
+
+  const database = await toDosApiClient.getDatabaseAsync();
+  return database;
+}
