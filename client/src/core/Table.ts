@@ -1,5 +1,5 @@
 import { ColumnDefinition } from "./ColumnDefinition";
-import { getDefaultValue } from './DataType';
+import { getDefaultValue } from 'datagraph-shared';
 
 export interface Table {
   id: number;

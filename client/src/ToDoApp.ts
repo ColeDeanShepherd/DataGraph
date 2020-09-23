@@ -1,4 +1,4 @@
-import { BooleanDataType, StringDataType } from "./core/DataType";
+import { BooleanDataType, StringDataType } from "datagraph-shared";
 import { getOrCreateDatabaseTableByNameAsync, MockApiClient } from './core/ApiClient';
 import { Database } from "./core/Database";
 

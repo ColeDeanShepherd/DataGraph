@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 
-import { panic } from "./Error";
+import { panic } from "datagraph-shared";
 import { ColumnDefinition } from "./ColumnDefinition";
 import { Table } from "./Table";
 import { isIndexValid, removeElementWithCheckedIndex } from './Array';

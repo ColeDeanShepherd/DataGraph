@@ -1,4 +1,4 @@
-import { DataType } from './DataType';
+import { DataType } from 'datagraph-shared';
 
 export interface ColumnDefinition {
   name: string;
