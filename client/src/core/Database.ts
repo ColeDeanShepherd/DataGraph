@@ -1,25 +1,11 @@
 import * as _ from "lodash";
 
 import { panic } from "datagraph-shared";
-import { ColumnDefinition } from "./ColumnDefinition";
-import { Table } from "./Table";
-import { isIndexValid, removeElementWithCheckedIndex } from './Array';
-import { ILocalStorage, LocalStorage } from './LocalStorage';
-import { unwrap } from "./Util";
-
-export interface Database {
-  id: number;
-
-  changeHistory: Array<DatabaseChange>;
-
-  tables: Array<Table>;
-  nextTableId: number;
-}
-
-export interface DatabaseChange {
-  action: DatabaseAction;
-  dateTime: Date;
-}
+import {
+  isIndexValid, removeElementWithCheckedIndex,
+  Database, DatabaseAction, DatabaseActionKind, ColumnDefinition, Table
+} from "datagraph-shared";
+import { ILocalStorage } from './LocalStorage';
 
 export interface DatabaseServer {
   localStorage: ILocalStorage;
@@ -28,17 +14,6 @@ export interface DatabaseServer {
 
 export function getDatabaseTableByName(database: Database, tableName: string): Table | undefined {
   return database.tables.find(t => t.name === tableName);
-}
-
-export enum DatabaseActionKind {
-  AddTable,
-  AddTableRow,
-  RemoveTableRow,
-  ChangeTableCell
-}
-
-export interface DatabaseAction {
-  kind: DatabaseActionKind;
 }
 
 export function applyDatabaseAction(databaseServer: DatabaseServer, action: DatabaseAction) {

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { Database, Table } from "datagraph-shared";
 
 import './App.css';
 import { TableEditor } from "./TableEditor";
-import { Database, getDatabaseTableByName } from '../../core/Database';
-import { Table } from "../../core/Table";
+import { getDatabaseTableByName } from '../../core/Database';
 import { initToDosDatabase, toDosApiClient } from '../../ToDoApp';
 
 function App() {

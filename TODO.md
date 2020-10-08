@@ -2,6 +2,7 @@
 * move database to server
 * multi-user editing
 * refactoring
+* stop compiling test files in shared
 
 # Test Apps
 * To-Do List App

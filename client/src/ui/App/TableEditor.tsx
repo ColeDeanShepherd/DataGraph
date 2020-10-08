@@ -1,13 +1,12 @@
 import React from 'react';
 
-import { Table, createDefaultRow } from '../../core/Table';
+import { Table, createDefaultRow, DatabaseActionKind } from 'datagraph-shared';
 import { DataTypeKind } from "datagraph-shared";
 import { StringEditor } from "./StringEditor";
 import { useForceUpdate } from "./Util";
 import { BooleanEditor } from "./BooleanEditor";
 import { MockApiClient } from '../../core/ApiClient';
 import {
-  DatabaseActionKind,
   AddTableRowAction,
   RemoveTableRowAction,
   ChangeTableCellAction,

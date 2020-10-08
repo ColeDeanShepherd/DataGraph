@@ -1,4 +1,4 @@
-import { DataType, getDefaultValue } from "datagraph-shared";
+import { DataType, getDefaultValue } from "./DataType";
 
 export interface Database {
   id: number;
