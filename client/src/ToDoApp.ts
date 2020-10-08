@@ -1,6 +1,5 @@
-import { BooleanDataType, StringDataType } from "datagraph-shared";
+import { BooleanDataType, StringDataType, Database } from "datagraph-shared";
 import { getOrCreateDatabaseTableByNameAsync, MockApiClient } from './core/ApiClient';
-import { Database } from "./core/Database";
 
 export const toDosApiClient = new MockApiClient();
 

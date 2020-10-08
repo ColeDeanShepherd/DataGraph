@@ -1,11 +1,11 @@
 import * as _ from "lodash";
 
 import { panic } from "datagraph-shared";
-import { ColumnDefinition } from "datagraph-shared/src/ColumnDefinition";
-import { Table } from "./Table";
-import { isIndexValid, removeElementWithCheckedIndex } from './Array';
-import { ILocalStorage, LocalStorage } from './LocalStorage';
-import { unwrap } from "datagraph-shared/src/Util";
+import {
+  isIndexValid, removeElementWithCheckedIndex,
+  Database, DatabaseAction, DatabaseActionKind, ColumnDefinition, Table
+} from "datagraph-shared";
+import { ILocalStorage } from './LocalStorage';
 
 export interface DatabaseServer {
   localStorage: ILocalStorage;

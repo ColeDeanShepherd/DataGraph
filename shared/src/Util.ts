@@ -1,4 +1,4 @@
-import { panic } from "datagraph-shared";
+import { panic } from "./Error";
 
 export function unwrap<T>(value: T | undefined): T {
   if (value !== undefined) {

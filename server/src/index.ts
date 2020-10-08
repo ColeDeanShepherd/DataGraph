@@ -1,5 +1,5 @@
 import express from "express";
-import { Database } from "./Database";
+import { Database } from "datagraph-shared";
 
 const database: Database = {
   id: 1,

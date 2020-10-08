@@ -1,8 +1,20 @@
-import { ColumnDefinition } from "datagraph-shared/src/ColumnDefinition";
-import { Database, DatabaseAction, applyDatabaseAction, DatabaseServer, getDatabaseTableByName, DatabaseActionKind, AddTableAction } from './Database';
+import {
+  unwrap,
+  Database,
+  DatabaseAction,
+  DatabaseActionKind,
+  ColumnDefinition,
+  Table
+} from "datagraph-shared";
+
+import {
+  applyDatabaseAction,
+  DatabaseServer,
+  getDatabaseTableByName,
+  AddTableAction
+} from "../core/Database";
+
 import { LocalStorage } from "./LocalStorage";
-import { Table } from "./Table";
-import { unwrap } from "datagraph-shared/src/Util";
 
 export interface IApiClient {
   getDatabaseAsync(): Promise<Database>;
