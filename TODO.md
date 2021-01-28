@@ -1,9 +1,0 @@
-# DataGraph To-Do List
-* move database to server
-* multi-user editing
-* refactoring
-* stop compiling test files in shared
-
-# Test Apps
-* To-Do List App
-* A messaging app to help people connect with their local government. It’s meant to make government more approachable and transparent to the public. Thanks ideasai.net!
