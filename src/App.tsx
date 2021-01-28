@@ -1,23 +1,40 @@
 import React from 'react';
-import logo from './logo.svg';
+
+import data from "./data.json";
+
 import './App.css';
 
-function App() {
+interface IItem {
+  description: string;
+  tags: Array<string>;
+}
+
+function Tag(props: { tag: string }): JSX.Element {
+  const { tag } = props;
+
+  return <span>#{tag}</span>;
+}
+
+function Item(props: { value: IItem }): JSX.Element {
+  const { value } = props;
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+    <div>
+      <span>{value.description}</span>
+      <ul className="tags">
+        {value.tags.map(t => <li><Tag tag={t} /></li>)}
+      </ul>
+    </div>
+  );
+}
+
+function App(): JSX.Element {
+  return (
+    <div>
+      <header>
+        <ul>
+          {data.map(d => <li><Item value={d} /></li>)}
+        </ul>
       </header>
     </div>
   );

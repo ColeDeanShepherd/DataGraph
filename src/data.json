@@ -1,0 +1,18 @@
+[
+  {
+    "description": "Make sushi",
+    "tags": ["cooking", "at-home"]
+  },
+  {
+    "description": "Make pasta from scratch",
+    "tags": ["cooking", "at-home"]
+  },
+  {
+    "description": "Improv class",
+    "tags": ["class", "at-home"]
+  },
+  {
+    "description": "Dance class",
+    "tags": ["cooking", "at-home"]
+  }
+]
