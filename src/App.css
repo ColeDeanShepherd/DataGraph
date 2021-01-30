@@ -1,4 +1,22 @@
+.unmarked-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.activities {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  max-width: 640px;
+}
+
+.activities li {
+  padding-bottom: 1em;
+}
+
 .tags {
+  display: inline;
   list-style-type: none;
   padding: 0;
   margin: 0;
