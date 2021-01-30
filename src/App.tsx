@@ -5,6 +5,10 @@ import data from "./data.json";
 
 import "./App.css";
 
+const allTags = Set(
+  data.flatMap(d => d.tags)
+);
+
 interface IItem {
   description: string;
   tags: Array<string>;
@@ -49,10 +53,58 @@ function Item(props: { value: IItem, onTagClick?: (tag: string) => void }): JSX.
 function App(): JSX.Element {
   const [selectedTags, setSelectedTags] = useState(Set<string>());
 
+  function SelectedTags(): JSX.Element {
+    return (
+      <div>
+        <span>Selected Tags: </span>
+        <ul className="tags">
+          {selectedTags.map(t => {
+            const onClick = () => onSelectedTagClick(t);
+            return <li><Tag tag={t} onClick={onClick} /></li>;
+          })}
+        </ul>
+      </div>
+    );
+  }
+
   const onSelectedTagClick = (tag: string) => {
     setSelectedTags(selectedTags.delete(tag));
   };
 
+  const getAvailableTags = () => allTags.subtract(selectedTags);
+
+  function AvailableTags(): JSX.Element {
+    return (
+      <div>
+        <span>Available Tags: </span>
+        <ul className="tags d-block">
+          {getAvailableTags().map(t => <li><Tag tag={t} onClick={() => onTagClick(t)} /></li>)}
+        </ul>
+      </div>
+    );
+  }
+  
+  function Activities(): JSX.Element {
+    return (
+      <div>
+        <span>Activities:</span>
+        <ul className="activities">
+          {data
+            .filter(passesFilters)
+            .map(d => (
+              <li>
+                <div className="card">
+                  <div className="card-body">
+                    <Item value={d} onTagClick={onTagClick} />
+                  </div>
+                </div>
+              </li>
+            ))}
+        </ul>
+      </div>
+    );
+  }
+  
   const onTagClick = (tag: string) => {
     setSelectedTags(selectedTags.add(tag));
   };
@@ -64,31 +116,11 @@ function App(): JSX.Element {
   return (
     <div>
       <header>
-        <div>
-          <span>Selected Tags: </span>
-          <ul className="tags">
-            {selectedTags.map(t => {
-              const onClick = () => onSelectedTagClick(t);
-              return <li><Tag tag={t} onClick={onClick} /></li>;
-            })}
-          </ul>
-        </div>
-        <div>
-          <span>Activities:</span>
-          <ul className="activities">
-            {data
-              .filter(passesFilters)
-              .map(d => (
-                <li>
-                  <div className="card">
-                    <div className="card-body">
-                      <Item value={d} onTagClick={onTagClick} />
-                    </div>
-                  </div>
-                </li>
-              ))}
-          </ul>
-        </div>
+        <SelectedTags />
+        <br />
+        <AvailableTags />
+        <br />
+        <Activities />
       </header>
     </div>
   );

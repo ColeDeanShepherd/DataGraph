@@ -1,18 +1,430 @@
 [
   {
     "description": "Make sushi",
-    "tags": ["cooking", "at-home"]
+    "tags": ["cooking"]
   },
   {
-    "description": "Make pasta from scratch",
-    "tags": ["cooking", "at-home"]
+    "description": "Pasta from scratch",
+    "tags": ["cooking"]
+  },
+  {
+    "description": "Make tacos",
+    "tags": ["cooking"]
+  },
+  {
+    "description": "Make stir fry",
+    "tags": ["cooking"]
+  },
+  {
+    "description": "Kelsey’s souvlaki recipe on the fridge",
+    "tags": ["cooking", "kelsey"]
+  },
+  {
+    "description": "Tuna bowl: https://thegirlonbloor.com/miso-sesame-tuna-rice-bowls/",
+    "tags": ["cooking"]
+  },
+  {
+    "description": "Cook-off (same dish, different dishes)",
+    "tags": ["cooking", "competitive"]
+  },
+  {
+    "description": "Over-the top cake",
+    "tags": ["cooking", "baking", "art"]
+  },
+  {
+    "description": "Fondue",
+    "tags": ["cooking"]
+  },
+  {
+    "description": "Blind taste test",
+    "tags": ["game", "food & drink"]
+  },
+  {
+    "description": "Take-out",
+    "tags": ["food & drink"]
+  },
+  {
+    "description": "Card games",
+    "tags": ["game"]
+  },
+  {
+    "description": "Twister-type games (there’s a bop-it game thing I need to look up)",
+    "tags": ["game"]
+  },
+  {
+    "description": "Wii",
+    "tags": ["game"]
+  },
+  {
+    "description": "At home spa night",
+    "tags": ["relaxing"]
+  },
+  {
+    "description": "Karaoke at home",
+    "tags": ["music"]
+  },
+  {
+    "description": "Airbnb online experience",
+    "tags": ["online"]
   },
   {
     "description": "Improv class",
-    "tags": ["class", "at-home"]
+    "tags": ["comedy", "class"]
   },
   {
     "description": "Dance class",
-    "tags": ["cooking", "at-home"]
+    "tags": ["dance", "class"]
+  },
+  {
+    "description": "Cooking class",
+    "tags": ["cooking", "class"]
+  },
+  {
+    "description": "Magic show",
+    "tags": ["show"]
+  },
+  {
+    "description": "Online classes",
+    "tags": ["online", "class"]
+  },
+  {
+    "description": "Photoshoot",
+    "tags": ["photos"]
+  },
+  {
+    "description": "Puzzle",
+    "tags": ["collaborate", "puzzle"]
+  },
+  {
+    "description": "Draw",
+    "tags": ["art"]
+  },
+  {
+    "description": "Paint",
+    "tags": ["art"]
+  },
+  {
+    "description": "Make candles",
+    "tags": ["craft"]
+  },
+  {
+    "description": "Make Tik-Tok videos together “Tik-tok date night challenge”",
+    "tags": ["videography", "social media", "collaborate"]
+  },
+  {
+    "description": "Mystery night in (date night box)",
+    "tags": ["surprise", "at-home"]
+  },
+  {
+    "description": "Exercise together",
+    "tags": ["exercise"]
+  },
+  {
+    "description": "Turn off all lights for the night (I will probably break everything)",
+    "tags": ["quirky"]
+  },
+  {
+    "description": "Dance",
+    "tags": ["dance"]
+  },
+  {
+    "description": "Blade & Timber Axe Throwing",
+    "tags": ["game", "shooting & throwing"]
+  },
+  {
+    "description": "Archery",
+    "tags": ["shooting & throwing"]
+  },
+  {
+    "description": "creativitea",
+    "tags": ["tea", "food & drink", "pottery", "art"]
+  },
+  {
+    "description": "Escape room",
+    "tags": ["puzzle", "collaborate"]
+  },
+  {
+    "description": "Indoor mini golf (flatstick)",
+    "tags": ["golf", "indoors"]
+  },
+  {
+    "description": "Bar hopping",
+    "tags": ["drinking", "bar"]
+  },
+  {
+    "description": "Fancy cocktails",
+    "tags": ["drinking", "bar", "cocktails"]
+  },
+  {
+    "description": "Dive bars",
+    "tags": ["drinking", "bar"]
+  },
+  {
+    "description": "Cycle Saloon",
+    "tags": ["drinking", "tour"]
+  },
+  {
+    "description": "Cornhole",
+    "tags": ["bar", "game"]
+  },
+  {
+    "description": "Arcade games",
+    "tags": ["game", "arcade"]
+  },
+  {
+    "description": "Shuffleboard",
+    "tags": ["bar", "game"]
+  },
+  {
+    "description": "Darts",
+    "tags": ["bar", "game"]
+  },
+  {
+    "description": "Billiards",
+    "tags": ["bar", "game"]
+  },
+  {
+    "description": "Bowling",
+    "tags": ["game", "competitive"]
+  },
+  {
+    "description": "Roller skating",
+    "tags": ["skate"]
+  },
+  {
+    "description": "Ice skating",
+    "tags": ["skate"]
+  },
+  {
+    "description": "Laser tag",
+    "tags": ["game", "competitive"]
+  },
+  {
+    "description": "Glass blowing",
+    "tags": []
+  },
+  {
+    "description": "Blacksmithing",
+    "tags": []
+  },
+  {
+    "description": "Painting",
+    "tags": []
+  },
+  {
+    "description": "Sculpting",
+    "tags": []
+  },
+  {
+    "description": "Drawing",
+    "tags": []
+  },
+  {
+    "description": "Dancing",
+    "tags": []
+  },
+  {
+    "description": "Improv comedy",
+    "tags": []
+  },
+  {
+    "description": "Cocktails",
+    "tags": []
+  },
+  {
+    "description": "Comedy show",
+    "tags": []
+  },
+  {
+    "description": "Art Museum",
+    "tags": []
+  },
+  {
+    "description": "Science Museum",
+    "tags": []
+  },
+  {
+    "description": "MoPop",
+    "tags": []
+  },
+  {
+    "description": "Aquarium",
+    "tags": []
+  },
+  {
+    "description": "Rock climbing",
+    "tags": []
+  },
+  {
+    "description": "Seattle CityPass",
+    "tags": []
+  },
+  {
+    "description": "Wine tasting",
+    "tags": []
+  },
+  {
+    "description": "Beer tasting",
+    "tags": []
+  },
+  {
+    "description": "Cider tasting",
+    "tags": []
+  },
+  {
+    "description": "Chef-guided tour",
+    "tags": []
+  },
+  {
+    "description": "Drive-in movie",
+    "tags": []
+  },
+  {
+    "description": "Live music",
+    "tags": []
+  },
+  {
+    "description": "Karaoke",
+    "tags": []
+  },
+  {
+    "description": "Seoul bowl",
+    "tags": []
+  },
+  {
+    "description": "Driving range",
+    "tags": []
+  },
+  {
+    "description": "Mini golf",
+    "tags": []
+  },
+  {
+    "description": "Bocce ball",
+    "tags": []
+  },
+  {
+    "description": "Tennis",
+    "tags": []
+  },
+  {
+    "description": "Disc golf",
+    "tags": []
+  },
+  {
+    "description": "Walk through a park",
+    "tags": []
+  },
+  {
+    "description": "Picnic",
+    "tags": []
+  },
+  {
+    "description": "Seattle Donut Boat Co.",
+    "tags": []
+  },
+  {
+    "description": "Hot tub boat",
+    "tags": []
+  },
+  {
+    "description": "Plane tour of seattle",
+    "tags": []
+  },
+  {
+    "description": "Helicopter ride",
+    "tags": []
+  },
+  {
+    "description": "Go karting",
+    "tags": []
+  },
+  {
+    "description": "Hiking",
+    "tags": []
+  },
+  {
+    "description": "Kayaking",
+    "tags": []
+  },
+  {
+    "description": "Sailboat ride",
+    "tags": []
+  },
+  {
+    "description": "Hot air balloon ride",
+    "tags": []
+  },
+  {
+    "description": "Ferry ride",
+    "tags": []
+  },
+  {
+    "description": "Deception pass",
+    "tags": []
+  },
+  {
+    "description": "Volunteer Community farm for produce",
+    "tags": []
+  },
+  {
+    "description": "Volunteer Homeless",
+    "tags": []
+  },
+  {
+    "description": "Stargazing",
+    "tags": []
+  },
+  {
+    "description": "Catch sunset/sunrise",
+    "tags": []
+  },
+  {
+    "description": "Picking fresh fruit",
+    "tags": []
+  },
+  {
+    "description": "Farmer’s market",
+    "tags": []
+  },
+  {
+    "description": "Hotel room/cabin",
+    "tags": []
+  },
+  {
+    "description": "Ziplining",
+    "tags": []
+  },
+  {
+    "description": "Bungee jumping",
+    "tags": []
+  },
+  {
+    "description": "Fishing",
+    "tags": []
+  },
+  {
+    "description": "Biking together",
+    "tags": []
+  },
+  {
+    "description": "Camping",
+    "tags": []
+  },
+  {
+    "description": "Smores",
+    "tags": []
+  },
+  {
+    "description": "Snowshoeing",
+    "tags": []
+  },
+  {
+    "description": "Sledding",
+    "tags": []
+  },
+  {
+    "description": "Skiing",
+    "tags": []
   }
 ]
