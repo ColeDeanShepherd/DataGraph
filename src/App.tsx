@@ -1,4 +1,5 @@
 import { OrderedSet, Set } from "immutable";
+import * as _ from "lodash";
 import React, { useState } from "react";
 
 import data from "./data.json";
@@ -56,8 +57,22 @@ function Item(props: { value: IItem, onTagClick?: (tag: string) => void }): JSX.
   );
 }
 
+function SearchBar(
+  props: { searchText: string, onChange: (value: string) => void }
+): JSX.Element {
+  const { searchText, onChange } = props;
+
+  return <input
+    type="text"
+    placeholder="search"
+    value={searchText}
+    onChange={e => onChange(e.target.value)} />;
+}
+
 function App(): JSX.Element {
   const [selectedTags, setSelectedTags] = useState(Set<string>());
+  const [searchText, setSearchText] = useState("");
+  
 
   function SelectedTags(): JSX.Element {
     return (
@@ -115,13 +130,22 @@ function App(): JSX.Element {
     setSelectedTags(selectedTags.add(tag));
   };
 
-  const passesFilters = (item: IItem) =>
+  const passesFilters = (item: IItem) => passesTags(item) && passesSearch(item);
+
+  const passesSearch = (item: IItem) =>
+    (searchText.length === 0) ||
+    _.includes(item.description.toLowerCase(), searchText.toLowerCase()) ||
+    item.tags.some(t => _.includes(t.toLowerCase(), searchText.toLowerCase()));
+
+  const passesTags = (item: IItem) =>
     selectedTags.isEmpty() ||
-    item.tags.some(it => selectedTags.contains(it));
+    item.tags.some(t => selectedTags.contains(t));
 
   return (
     <div>
       <header>
+        <SearchBar searchText={searchText} onChange={setSearchText} />
+        <br />
         <SelectedTags />
         <br />
         <AvailableTags />
