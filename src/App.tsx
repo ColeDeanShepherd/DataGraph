@@ -1,13 +1,19 @@
-import { Set } from "immutable";
+import { OrderedSet, Set } from "immutable";
 import React, { useState } from "react";
 
 import data from "./data.json";
 
 import "./App.css";
 
-const allTags = Set(
-  data.flatMap(d => d.tags)
+const allTags = OrderedSet(
+  data
+    .flatMap(d => d.tags)
+    .sort(caseInsensitiveStrSortCompareFn)
 );
+
+function caseInsensitiveStrSortCompareFn(a: string, b: string): number {
+  return a.toLowerCase().localeCompare(b.toLowerCase());
+}
 
 interface IItem {
   description: string;
