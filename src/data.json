@@ -201,103 +201,107 @@
   },
   {
     "description": "Glass blowing",
-    "tags": []
+    "tags": ["art", "class"]
   },
   {
     "description": "Blacksmithing",
-    "tags": []
+    "tags": ["art", "class"]
   },
   {
     "description": "Painting",
-    "tags": []
+    "tags": ["art", "class"]
   },
   {
     "description": "Sculpting",
-    "tags": []
+    "tags": ["art", "class"]
   },
   {
     "description": "Drawing",
-    "tags": []
+    "tags": ["art", "class"]
+  },
+  {
+    "description": "Blind group cooking",
+    "tags": ["cooking", "fun"]
   },
   {
     "description": "Dancing",
-    "tags": []
+    "tags": ["dance", "class"]
   },
   {
     "description": "Improv comedy",
-    "tags": []
+    "tags": ["comedy", "class", "show"]
   },
   {
     "description": "Cocktails",
-    "tags": []
+    "tags": ["DIY", "class", "bar"]
   },
   {
     "description": "Comedy show",
-    "tags": []
+    "tags": ["comedy", "show"]
   },
   {
     "description": "Art Museum",
-    "tags": []
+    "tags": ["museum", "art", "indoors"]
   },
   {
     "description": "Science Museum",
-    "tags": []
+    "tags": ["museum", "science", "indoors"]
   },
   {
     "description": "MoPop",
-    "tags": []
+    "tags": ["museum", "pop-culture", "indoors"]
   },
   {
     "description": "Aquarium",
-    "tags": []
+    "tags": ["animals", "zoo"]
   },
   {
     "description": "Rock climbing",
-    "tags": []
+    "tags": ["exercise", "climbing", "indoors"]
   },
   {
     "description": "Seattle CityPass",
-    "tags": []
+    "tags": ["variety", "tourist"]
   },
   {
     "description": "Wine tasting",
-    "tags": []
+    "tags": ["wine", "tasting"]
   },
   {
     "description": "Beer tasting",
-    "tags": []
+    "tags": ["beer", "tasting"]
   },
   {
     "description": "Cider tasting",
-    "tags": []
+    "tags": ["beer", "tasting"]
   },
   {
     "description": "Chef-guided tour",
-    "tags": []
+    "tags": ["guided tour", "food"]
   },
   {
     "description": "Drive-in movie",
-    "tags": []
+    "tags": ["movie"]
   },
   {
     "description": "Live music",
-    "tags": []
+    "tags": ["music", "concert", "live"]
   },
   {
     "description": "Karaoke",
-    "tags": []
+    "tags": ["music", "singing", "bar"]
   },
   {
     "description": "Seoul bowl",
-    "tags": []
+    "tags": ["food", "korean"]
   },
   {
     "description": "Driving range",
-    "tags": []
+    "tags": ["golf", "outdoors"]
   },
   {
     "description": "Mini golf",
-    "tags": []
+    "tags": ["golf", "outdoors", "indoors"]
   },
   {
     "description": "Bocce ball",
