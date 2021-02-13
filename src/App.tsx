@@ -239,8 +239,7 @@ function App(): JSX.Element {
         <br />
         <SelectedTags />
         <br />
-        <AvailableTags />
-        <br />
+        {false ? <div><AvailableTags /><br /></div> : null}
         <Activities />
       </header>
     </div>
