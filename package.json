@@ -6,13 +6,11 @@
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.3",
     "@testing-library/user-event": "^12.6.2",
-    "@types/jest": "^26.0.20",
-    "@types/node": "^12.19.15",
-    "@types/react": "^16.14.2",
-    "@types/react-dom": "^16.9.10",
     "bootstrap": "^5.0.0-beta2",
+    "history": "^5.0.0",
     "immutable": "^4.0.0-rc.12",
     "lodash": "^4.17.20",
+    "query-string": "^6.14.0",
     "react": "^17.0.1",
     "react-autosuggest": "^10.1.0",
     "react-dom": "^17.0.1",
@@ -46,8 +44,12 @@
     ]
   },
   "devDependencies": {
+    "@types/jest": "^26.0.20",
     "@types/lodash": "^4.14.168",
+    "@types/node": "^12.19.15",
+    "@types/react": "^16.14.2",
     "@types/react-autosuggest": "^10.1.1",
+    "@types/react-dom": "^16.9.10",
     "@types/react-tagsinput": "^3.19.7"
   }
 }

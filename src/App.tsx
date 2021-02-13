@@ -1,5 +1,10 @@
 import { OrderedSet, Set } from "immutable";
 import * as _ from "lodash";
+
+import queryString from "query-string";
+
+import history from 'history/browser';
+
 import React, { useState } from "react";
 
 import TagsInput from 'react-tagsinput';
@@ -122,11 +127,18 @@ function SearchBar(
 }
 
 function App(): JSX.Element {
-  const [selectedTags, setSelectedTags] = useState(Set<string>());
-  const [searchText, setSearchText] = useState("");
-  const [searchDescriptions, setSearchDescriptions] = useState(true);
-  const [searchTags, setSearchTags] = useState(true);
-  const [searchResults, setSearchResults] = useState(data);
+  const uriParams = queryString.parse(history.location.search);
+  const uriTags = (uriParams.t !== undefined)
+    ? (Array.isArray(uriParams.t)
+      ? (uriParams.t as Array<string>)
+      : [uriParams.t as string])
+    : undefined;
+
+  const [searchText, setSearchText] = useState((uriParams.q !== undefined) ? (uriParams.q as string) : "");
+  const [selectedTags, setSelectedTags] = useState((uriTags !== undefined) ? Set<string>(uriTags) : Set<string>());
+  const [searchDescriptions, setSearchDescriptions] = useState((uriParams.searchDesc !== undefined) ? (uriParams.searchDesc === "true") : true);
+  const [searchTags, setSearchTags] = useState((uriParams.searchTags !== undefined) ? (uriParams.searchTags === "true") : true);
+  const [searchResults, setSearchResults] = useState(getSearchResults());
 
   function SelectedTags(): JSX.Element {
     function autosuggestRenderInput(props: TagsInput.RenderInputProps<string>) {
@@ -208,27 +220,45 @@ function App(): JSX.Element {
   const onTagClick = (tag: string) => {
     setSelectedTags(selectedTags.add(tag));
   };
+  
+  function getSearchResults() { return data.filter(passesFilters); }
 
   const onSearchClick = () => {
-    setSearchResults(data.filter(passesFilters));
+    setSearchResults(getSearchResults());
+
+    const uriParams = getUriParams();
+    history.push({
+      search: '?' + queryString.stringify(uriParams)
+    })
   };
 
-  const passesFilters = (item: IItem) => passesTags(item) && passesSearch(item);
+  function passesFilters(item: IItem) { return passesTags(item) && passesSearch(item); }
 
-  const passesSearch = (item: IItem) =>
-    (searchText.length === 0) ||
+  function passesSearch(item: IItem) {
+    return (searchText.length === 0) ||
     (searchDescriptions && passesDescriptionSearch(item)) ||
     (searchTags && passesTagSearch(item));
+  }
   
-  const passesDescriptionSearch = (item: IItem) =>
-    _.includes(item.description.toLowerCase(), searchText.toLowerCase());
+  function passesDescriptionSearch(item: IItem) {
+    return _.includes(item.description.toLowerCase(), searchText.toLowerCase());
+  }
   
-  const passesTagSearch = (item: IItem) =>
-    item.tags.some(t => _.includes(t.toLowerCase(), searchText.toLowerCase()));
+  function passesTagSearch(item: IItem) {
+    return item.tags.some(t => _.includes(t.toLowerCase(), searchText.toLowerCase()));
+  }
 
-  const passesTags = (item: IItem) =>
-    selectedTags.isEmpty() ||
-    item.tags.some(t => selectedTags.contains(t));
+  function passesTags(item: IItem) {
+    return selectedTags.isEmpty() ||
+      item.tags.some(t => selectedTags.contains(t));
+  }
+
+  const getUriParams = () => ({
+    q: searchText,
+    t: selectedTags.toArray(),
+    searchDesc: searchDescriptions,
+    searchTags: searchTags
+  });
 
   return (
     <div>

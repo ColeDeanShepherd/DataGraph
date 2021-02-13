@@ -1,7 +1,9 @@
 High Pri.
-* Links to searches
+* Clear search button
 
 Low Pri.
+* Surround search form in visual element.
+* Improve selected tags styling (input, autosuggest)
 * Add locations to activities?
 * Random activity?
 * Optimize rendering & searching
