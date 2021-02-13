@@ -2,6 +2,11 @@ import { OrderedSet, Set } from "immutable";
 import * as _ from "lodash";
 import React, { useState } from "react";
 
+import TagsInput from 'react-tagsinput';
+import 'react-tagsinput/react-tagsinput.css';
+
+import Autosuggest from 'react-autosuggest';
+
 import data from "./data.json";
 
 import "./App.css";
@@ -123,22 +128,48 @@ function App(): JSX.Element {
   const [searchTags, setSearchTags] = useState(true);
 
   function SelectedTags(): JSX.Element {
+    function autosuggestRenderInput(props: TagsInput.RenderInputProps<string>) {
+      const handleOnChange = (event: React.FormEvent<any>, params: Autosuggest.ChangeEvent) => {
+        const { method } = params;
+
+        if (method === 'enter') {
+          event.preventDefault();
+        } else {
+          props.onChange(event as any);
+        }
+      };
+     
+      const inputValue = (props.value && props.value.trim().toLowerCase()) || '';
+     
+      const suggestions = getAvailableTags()
+        .filter(tag => tag.toLowerCase().slice(0, inputValue.length) === inputValue)
+        .toArray();
+     
+      return (
+        <Autosuggest
+          ref={props.ref}
+          suggestions={suggestions}
+          shouldRenderSuggestions={value => !!value && (value.trim().length > 0)}
+          getSuggestionValue={suggestion => suggestion}
+          renderSuggestion={suggestion => <span>{suggestion}</span>}
+          inputProps={{...props, onChange: handleOnChange}}
+          onSuggestionSelected={(e, {suggestion}) => props.addTag(suggestion)}
+          onSuggestionsClearRequested={() => {}}
+          onSuggestionsFetchRequested={() => {}}
+        />
+      );
+    }
+
     return (
       <div>
         <span>Selected Tags: </span>
-        <ul className="tags">
-          {selectedTags.map(t => {
-            const onClick = () => onSelectedTagClick(t);
-            return <li><Tag tag={t} onClick={onClick} /></li>;
-          })}
-        </ul>
+        <TagsInput
+          renderInput={autosuggestRenderInput}
+          value={selectedTags.toArray()}
+          onChange={tags => setSelectedTags(Set<string>(tags))} />
       </div>
     );
   }
-
-  const onSelectedTagClick = (tag: string) => {
-    setSelectedTags(selectedTags.delete(tag));
-  };
 
   const getAvailableTags = () => allTags.subtract(selectedTags);
 
