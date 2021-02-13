@@ -58,9 +58,23 @@ function Item(props: { value: IItem, onTagClick?: (tag: string) => void }): JSX.
 }
 
 function SearchBar(
-  props: { searchText: string, onChange: (value: string) => void }
+  props: {
+    searchText: string,
+    searchDescriptions: boolean,
+    searchTags: boolean,
+    onChange: (value: string) => void,
+    onSearchDescriptionsChange: (value: boolean) => void,
+    onSearchTagsChange: (value: boolean) => void
+  }
 ): JSX.Element {
-  const { searchText, onChange } = props;
+  const {
+    searchText,
+    searchDescriptions,
+    searchTags,
+    onChange,
+    onSearchDescriptionsChange,
+    onSearchTagsChange
+  } = props;
 
   return (
     <div>
@@ -68,8 +82,36 @@ function SearchBar(
         type="text"
         placeholder="search"
         value={searchText}
-        onChange={e => onChange(e.target.value)} />
-      
+        onChange={e => onChange(e.target.value)}
+        className="form-control" />
+      <div className="form-check form-check-inline">
+        <input
+          type="checkbox"
+          id="searchDescriptions"
+          className="form-check-input"
+          value="searchDescriptions"
+          checked={searchDescriptions}
+          onChange={e => onSearchDescriptionsChange(e.target.checked)} />
+        <label
+          className="form-check-label"
+          htmlFor="searchDescriptions">
+          Search Descriptions
+        </label>
+      </div>
+      <div className="form-check form-check-inline">
+        <input
+          type="checkbox"
+          id="searchTags" 
+          className="form-check-input"
+          value="searchTags"
+          checked={searchTags}
+          onChange={e => onSearchTagsChange(e.target.checked)} />
+        <label
+          className="form-check-label"
+          htmlFor="searchTags">
+          Search Tags
+        </label>
+      </div>
     </div>
   );
 }
@@ -77,7 +119,8 @@ function SearchBar(
 function App(): JSX.Element {
   const [selectedTags, setSelectedTags] = useState(Set<string>());
   const [searchText, setSearchText] = useState("");
-  
+  const [searchDescriptions, setSearchDescriptions] = useState(true);
+  const [searchTags, setSearchTags] = useState(true);
 
   function SelectedTags(): JSX.Element {
     return (
@@ -139,7 +182,13 @@ function App(): JSX.Element {
 
   const passesSearch = (item: IItem) =>
     (searchText.length === 0) ||
-    _.includes(item.description.toLowerCase(), searchText.toLowerCase()) ||
+    (searchDescriptions && passesDescriptionSearch(item)) ||
+    (searchTags && passesTagSearch(item));
+  
+  const passesDescriptionSearch = (item: IItem) =>
+    _.includes(item.description.toLowerCase(), searchText.toLowerCase());
+  
+  const passesTagSearch = (item: IItem) =>
     item.tags.some(t => _.includes(t.toLowerCase(), searchText.toLowerCase()));
 
   const passesTags = (item: IItem) =>
@@ -149,7 +198,13 @@ function App(): JSX.Element {
   return (
     <div>
       <header>
-        <SearchBar searchText={searchText} onChange={setSearchText} />
+        <SearchBar
+          searchText={searchText}
+          searchDescriptions={searchDescriptions}
+          searchTags={searchTags}
+          onChange={setSearchText}
+          onSearchDescriptionsChange={setSearchDescriptions}
+          onSearchTagsChange={setSearchTags} />
         <br />
         <SelectedTags />
         <br />

@@ -1,4 +1,3 @@
-* Better control over search types
 * Tag search input
 * Add locations to activities?
 * Random activity?
