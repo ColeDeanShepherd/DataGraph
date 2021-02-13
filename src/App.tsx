@@ -62,11 +62,16 @@ function SearchBar(
 ): JSX.Element {
   const { searchText, onChange } = props;
 
-  return <input
-    type="text"
-    placeholder="search"
-    value={searchText}
-    onChange={e => onChange(e.target.value)} />;
+  return (
+    <div>
+      <input
+        type="text"
+        placeholder="search"
+        value={searchText}
+        onChange={e => onChange(e.target.value)} />
+      
+    </div>
+  );
 }
 
 function App(): JSX.Element {
