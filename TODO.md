@@ -1,5 +1,4 @@
 High Pri.
-* Clear search button
 
 Low Pri.
 * Surround search form in visual element.
@@ -9,3 +8,5 @@ Low Pri.
 * Optimize rendering & searching
 * Fuzzy search
 * Unique "key" props
+* Refactor
+* Add tests

@@ -126,166 +126,229 @@ function SearchBar(
   );
 }
 
-function App(): JSX.Element {
-  const uriParams = queryString.parse(history.location.search);
-  const uriTags = (uriParams.t !== undefined)
-    ? (Array.isArray(uriParams.t)
-      ? (uriParams.t as Array<string>)
-      : [uriParams.t as string])
-    : undefined;
+interface IAppState {
+  searchText: string;
+  selectedTags: Set<string>;
+  searchDescriptions: boolean;
+  searchTags: boolean;
+  searchResults: Array<IItem>;
+}
 
-  const [searchText, setSearchText] = useState((uriParams.q !== undefined) ? (uriParams.q as string) : "");
-  const [selectedTags, setSelectedTags] = useState((uriTags !== undefined) ? Set<string>(uriTags) : Set<string>());
-  const [searchDescriptions, setSearchDescriptions] = useState((uriParams.searchDesc !== undefined) ? (uriParams.searchDesc === "true") : true);
-  const [searchTags, setSearchTags] = useState((uriParams.searchTags !== undefined) ? (uriParams.searchTags === "true") : true);
-  const [searchResults, setSearchResults] = useState(getSearchResults());
+class App extends React.Component<{}, IAppState> {
+  public constructor(props: {}) {
+    super(props);
 
-  function SelectedTags(): JSX.Element {
-    function autosuggestRenderInput(props: TagsInput.RenderInputProps<string>) {
-      const handleOnChange = (event: React.FormEvent<any>, params: Autosuggest.ChangeEvent) => {
-        const { method } = params;
+    const uriParams = queryString.parse(history.location.search);
+    const uriTags = (uriParams.t !== undefined)
+      ? (Array.isArray(uriParams.t)
+        ? (uriParams.t as Array<string>)
+        : [uriParams.t as string])
+      : undefined;
 
-        if (method === 'enter') {
-          event.preventDefault();
-        } else {
-          props.onChange(event as any);
-        }
-      };
-     
-      const inputValue = (props.value && props.value.trim().toLowerCase()) || '';
-     
-      const suggestions = getAvailableTags()
-        .filter(tag => tag.toLowerCase().slice(0, inputValue.length) === inputValue)
-        .toArray();
-     
+    this.state = {
+      searchText: (uriParams.q !== undefined) ? (uriParams.q as string) : "",
+      selectedTags: (uriTags !== undefined) ? Set<string>(uriTags) : Set<string>(),
+      searchDescriptions: (uriParams.searchDesc !== undefined) ? (uriParams.searchDesc === "true") : true,
+      searchTags: (uriParams.searchTags !== undefined) ? (uriParams.searchTags === "true") : true,
+      searchResults: []
+    };
+  }
+
+  public componentDidMount() {
+    this.doSearch();
+  }
+
+  public render(): JSX.Element {
+    const {
+      searchText,
+      selectedTags,
+      searchDescriptions,
+      searchTags,
+      searchResults
+    } = this.state;
+  
+    const SelectedTags = () => {
+      function autosuggestRenderInput(props: TagsInput.RenderInputProps<string>) {
+        const handleOnChange = (event: React.FormEvent<any>, params: Autosuggest.ChangeEvent) => {
+          const { method } = params;
+  
+          if (method === 'enter') {
+            event.preventDefault();
+          } else {
+            props.onChange(event as any);
+          }
+        };
+       
+        const inputValue = (props.value && props.value.trim().toLowerCase()) || '';
+       
+        const suggestions = getAvailableTags()
+          .filter(tag => tag.toLowerCase().slice(0, inputValue.length) === inputValue)
+          .toArray();
+       
+        return (
+          <Autosuggest
+            ref={props.ref}
+            suggestions={suggestions}
+            shouldRenderSuggestions={value => !!value && (value.trim().length > 0)}
+            getSuggestionValue={suggestion => suggestion}
+            renderSuggestion={suggestion => <span>{suggestion}</span>}
+            inputProps={{...props, onChange: handleOnChange}}
+            onSuggestionSelected={(e, {suggestion}) => props.addTag(suggestion)}
+            onSuggestionsClearRequested={() => {}}
+            onSuggestionsFetchRequested={() => {}}
+          />
+        );
+      }
+  
       return (
-        <Autosuggest
-          ref={props.ref}
-          suggestions={suggestions}
-          shouldRenderSuggestions={value => !!value && (value.trim().length > 0)}
-          getSuggestionValue={suggestion => suggestion}
-          renderSuggestion={suggestion => <span>{suggestion}</span>}
-          inputProps={{...props, onChange: handleOnChange}}
-          onSuggestionSelected={(e, {suggestion}) => props.addTag(suggestion)}
-          onSuggestionsClearRequested={() => {}}
-          onSuggestionsFetchRequested={() => {}}
-        />
+        <div>
+          <span>Selected Tags: </span>
+          <TagsInput
+            renderInput={autosuggestRenderInput}
+            value={selectedTags.toArray()}
+            onChange={tags => this.setState({ selectedTags: Set<string>(tags) })} />
+        </div>
       );
     }
-
-    return (
-      <div>
-        <span>Selected Tags: </span>
-        <TagsInput
-          renderInput={autosuggestRenderInput}
-          value={selectedTags.toArray()}
-          onChange={tags => setSelectedTags(Set<string>(tags))} />
-      </div>
-    );
-  }
-
-  const getAvailableTags = () => allTags.subtract(selectedTags);
-
-  function AvailableTags(): JSX.Element {
-    return (
-      <div>
-        <span>Available Tags: </span>
-        <ul className="tags d-block">
-          {getAvailableTags().map(t => <li><Tag tag={t} onClick={() => onTagClick(t)} /></li>)}
-        </ul>
-      </div>
-    );
-  }
   
-  function Activities(): JSX.Element {
-    return (
-      <div>
-        <span>Activities:</span>
-        <ul className="activities">
-          {searchResults
-            .map(d => (
-              <li>
-                <div className="card">
-                  <div className="card-body">
-                    <Item value={d} onTagClick={onTagClick} />
+    const getAvailableTags = () => allTags.subtract(selectedTags);
+  
+    function AvailableTags(): JSX.Element {
+      return (
+        <div>
+          <span>Available Tags: </span>
+          <ul className="tags d-block">
+            {getAvailableTags().map(t => <li><Tag tag={t} onClick={() => onTagClick(t)} /></li>)}
+          </ul>
+        </div>
+      );
+    }
+    
+    function Activities(): JSX.Element {
+      return (
+        <div>
+          <span>Activities:</span>
+          <ul className="activities">
+            {searchResults
+              .map(d => (
+                <li>
+                  <div className="card">
+                    <div className="card-body">
+                      <Item value={d} onTagClick={onTagClick} />
+                    </div>
                   </div>
-                </div>
-              </li>
-            ))}
-        </ul>
+                </li>
+              ))}
+          </ul>
+        </div>
+      );
+    }
+    
+    const onTagClick = (tag: string) => {
+      this.setState({ selectedTags: selectedTags.add(tag)});
+    };
+  
+    const onClearClick = () => {
+      this.setState({
+        searchText: "",
+        selectedTags: Set<string>(),
+        searchDescriptions: true,
+        searchTags: true
+      }, () => {
+        this.doSearch();
+      });
+    }
+  
+    return (
+      <div>
+        <header>
+          <SearchBar
+            searchText={searchText}
+            searchDescriptions={searchDescriptions}
+            searchTags={searchTags}
+            onChange={value => this.setState({ searchText: value })}
+            onSearchDescriptionsChange={value => this.setState({ searchDescriptions: value })}
+            onSearchTagsChange={value => this.setState({ searchTags: value })} />
+          <br />
+          <SelectedTags />
+          <br />
+          {false ? <div><AvailableTags /><br /></div> : null}
+          <div>
+          <button
+            type="button"
+            className="btn btn-primary btn-sm"
+            onClick={() => this.doSearch()}>
+            Search
+          </button>
+          <button
+            type="button"
+            className="btn btn-primary btn-sm"
+            onClick={onClearClick}>
+            Clear
+          </button>
+          </div>
+          <Activities />
+        </header>
       </div>
     );
   }
-  
-  const onTagClick = (tag: string) => {
-    setSelectedTags(selectedTags.add(tag));
-  };
-  
-  function getSearchResults() { return data.filter(passesFilters); }
 
-  const onSearchClick = () => {
-    setSearchResults(getSearchResults());
+  private doSearch() {
+    this.setState({ searchResults: this.getSearchResults() });
 
-    const uriParams = getUriParams();
+    const uriParams = this.getUriParams();
     history.push({
       search: '?' + queryString.stringify(uriParams)
     })
-  };
-
-  function passesFilters(item: IItem) { return passesTags(item) && passesSearch(item); }
-
-  function passesSearch(item: IItem) {
-    return (searchText.length === 0) ||
-    (searchDescriptions && passesDescriptionSearch(item)) ||
-    (searchTags && passesTagSearch(item));
   }
   
-  function passesDescriptionSearch(item: IItem) {
-    return _.includes(item.description.toLowerCase(), searchText.toLowerCase());
-  }
+  private getSearchResults() {
+    const {
+      searchText,
+      selectedTags,
+      searchDescriptions,
+      searchTags
+    } = this.state;
+
+    function passesFilters(item: IItem) { return passesTags(item) && passesSearch(item); }
   
-  function passesTagSearch(item: IItem) {
-    return item.tags.some(t => _.includes(t.toLowerCase(), searchText.toLowerCase()));
+    function passesSearch(item: IItem) {
+      return (searchText.length === 0) ||
+      (searchDescriptions && passesDescriptionSearch(item)) ||
+      (searchTags && passesTagSearch(item));
+    }
+    
+    function passesDescriptionSearch(item: IItem) {
+      return _.includes(item.description.toLowerCase(), searchText.toLowerCase());
+    }
+    
+    function passesTagSearch(item: IItem) {
+      return item.tags.some(t => _.includes(t.toLowerCase(), searchText.toLowerCase()));
+    }
+  
+    function passesTags(item: IItem) {
+      return selectedTags.isEmpty() ||
+        item.tags.some(t => selectedTags.contains(t));
+    }
+
+    return data.filter(passesFilters);
   }
 
-  function passesTags(item: IItem) {
-    return selectedTags.isEmpty() ||
-      item.tags.some(t => selectedTags.contains(t));
+  private getUriParams() {
+    const {
+      searchText,
+      selectedTags,
+      searchDescriptions,
+      searchTags
+    } = this.state;
+
+    return {
+      q: searchText,
+      t: selectedTags.toArray(),
+      searchDesc: searchDescriptions,
+      searchTags: searchTags
+    };
   }
-
-  const getUriParams = () => ({
-    q: searchText,
-    t: selectedTags.toArray(),
-    searchDesc: searchDescriptions,
-    searchTags: searchTags
-  });
-
-  return (
-    <div>
-      <header>
-        <SearchBar
-          searchText={searchText}
-          searchDescriptions={searchDescriptions}
-          searchTags={searchTags}
-          onChange={setSearchText}
-          onSearchDescriptionsChange={setSearchDescriptions}
-          onSearchTagsChange={setSearchTags} />
-        <br />
-        <SelectedTags />
-        <br />
-        {false ? <div><AvailableTags /><br /></div> : null}
-        <div>
-        <button
-          type="button"
-          className="btn btn-primary btn-sm"
-          onClick={onSearchClick}>
-          Search
-        </button>
-        </div>
-        <Activities />
-      </header>
-    </div>
-  );
 }
 
 export default App;
