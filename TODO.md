@@ -1,7 +1,7 @@
 High Pri.
+* Finish tagging everything
 
 Low Pri.
-* Surround search form in visual element.
 * Improve selected tags styling (input, autosuggest)
 * Add locations to activities?
 * Random activity?
@@ -10,3 +10,7 @@ Low Pri.
 * Unique "key" props
 * Refactor
 * Add tests
+* Add speech to text
+* Add data export
+* Add data editor
+* Build search index ahead of time

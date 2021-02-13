@@ -245,7 +245,7 @@ class App extends React.Component<{}, IAppState> {
     }
     
     const onTagClick = (tag: string) => {
-      this.setState({ selectedTags: selectedTags.add(tag)});
+      this.setState({ selectedTags: selectedTags.add(tag)}, () => this.doSearch());
     };
   
     const onClearClick = () => {
@@ -262,30 +262,34 @@ class App extends React.Component<{}, IAppState> {
     return (
       <div>
         <header>
-          <SearchBar
-            searchText={searchText}
-            searchDescriptions={searchDescriptions}
-            searchTags={searchTags}
-            onChange={value => this.setState({ searchText: value })}
-            onSearchDescriptionsChange={value => this.setState({ searchDescriptions: value })}
-            onSearchTagsChange={value => this.setState({ searchTags: value })} />
-          <br />
-          <SelectedTags />
-          <br />
-          {false ? <div><AvailableTags /><br /></div> : null}
-          <div>
-          <button
-            type="button"
-            className="btn btn-primary btn-sm"
-            onClick={() => this.doSearch()}>
-            Search
-          </button>
-          <button
-            type="button"
-            className="btn btn-primary btn-sm"
-            onClick={onClearClick}>
-            Clear
-          </button>
+          <div className="card">
+            <div className="card-body">
+              <SearchBar
+                searchText={searchText}
+                searchDescriptions={searchDescriptions}
+                searchTags={searchTags}
+                onChange={value => this.setState({ searchText: value })}
+                onSearchDescriptionsChange={value => this.setState({ searchDescriptions: value })}
+                onSearchTagsChange={value => this.setState({ searchTags: value })} />
+              <br />
+              <SelectedTags />
+              <br />
+              {false ? <div><AvailableTags /><br /></div> : null}
+              <div>
+                <button
+                  type="button"
+                  className="btn btn-primary btn-sm"
+                  onClick={() => this.doSearch()}>
+                  Search
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-primary btn-sm"
+                  onClick={onClearClick}>
+                  Clear
+                </button>
+              </div>
+            </div>
           </div>
           <Activities />
         </header>
