@@ -6,3 +6,4 @@ Low Pri.
 * Random activity?
 * Optimize rendering & searching
 * Fuzzy search
+* Unique "key" props

@@ -126,6 +126,7 @@ function App(): JSX.Element {
   const [searchText, setSearchText] = useState("");
   const [searchDescriptions, setSearchDescriptions] = useState(true);
   const [searchTags, setSearchTags] = useState(true);
+  const [searchResults, setSearchResults] = useState(data);
 
   function SelectedTags(): JSX.Element {
     function autosuggestRenderInput(props: TagsInput.RenderInputProps<string>) {
@@ -189,8 +190,7 @@ function App(): JSX.Element {
       <div>
         <span>Activities:</span>
         <ul className="activities">
-          {data
-            .filter(passesFilters)
+          {searchResults
             .map(d => (
               <li>
                 <div className="card">
@@ -207,6 +207,10 @@ function App(): JSX.Element {
   
   const onTagClick = (tag: string) => {
     setSelectedTags(selectedTags.add(tag));
+  };
+
+  const onSearchClick = () => {
+    setSearchResults(data.filter(passesFilters));
   };
 
   const passesFilters = (item: IItem) => passesTags(item) && passesSearch(item);
@@ -240,6 +244,14 @@ function App(): JSX.Element {
         <SelectedTags />
         <br />
         {false ? <div><AvailableTags /><br /></div> : null}
+        <div>
+        <button
+          type="button"
+          className="btn btn-primary btn-sm"
+          onClick={onSearchClick}>
+          Search
+        </button>
+        </div>
         <Activities />
       </header>
     </div>
