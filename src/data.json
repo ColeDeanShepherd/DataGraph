@@ -1,303 +1,517 @@
 [
   {
     "description": "Make sushi",
-    "tags": ["cooking"]
+    "tags": [
+      "cooking"
+    ]
   },
   {
     "description": "Pasta from scratch",
-    "tags": ["cooking"]
+    "tags": [
+      "cooking"
+    ]
   },
   {
     "description": "Make tacos",
-    "tags": ["cooking"]
+    "tags": [
+      "cooking"
+    ]
   },
   {
     "description": "Make stir fry",
-    "tags": ["cooking"]
+    "tags": [
+      "cooking"
+    ]
   },
   {
     "description": "Tuna bowl: https://thegirlonbloor.com/miso-sesame-tuna-rice-bowls/",
-    "tags": ["cooking"]
+    "tags": [
+      "cooking"
+    ]
   },
   {
     "description": "Cook-off (same dish, different dishes)",
-    "tags": ["cooking", "competitive"]
+    "tags": [
+      "cooking",
+      "competitive"
+    ]
   },
   {
     "description": "Over-the top cake",
-    "tags": ["cooking", "baking", "art"]
+    "tags": [
+      "cooking",
+      "baking",
+      "art"
+    ]
   },
   {
     "description": "Fondue",
-    "tags": ["cooking"]
+    "tags": [
+      "cooking"
+    ]
   },
   {
     "description": "Blind taste test",
-    "tags": ["game", "food & drink"]
+    "tags": [
+      "game",
+      "food & drink"
+    ]
   },
   {
     "description": "Take-out",
-    "tags": ["food & drink"]
+    "tags": [
+      "food & drink"
+    ]
   },
   {
     "description": "Card games",
-    "tags": ["game"]
+    "tags": [
+      "game"
+    ]
   },
   {
     "description": "Twister-type games (there’s a bop-it game thing I need to look up)",
-    "tags": ["game"]
+    "tags": [
+      "game"
+    ]
   },
   {
     "description": "Wii",
-    "tags": ["game"]
+    "tags": [
+      "game"
+    ]
   },
   {
     "description": "At home spa night",
-    "tags": ["relaxing"]
+    "tags": [
+      "relaxing"
+    ]
   },
   {
     "description": "Karaoke at home",
-    "tags": ["music"]
+    "tags": [
+      "music"
+    ]
   },
   {
     "description": "Airbnb online experience",
-    "tags": ["online"]
+    "tags": [
+      "online"
+    ]
   },
   {
     "description": "Improv class",
-    "tags": ["comedy", "class"]
+    "tags": [
+      "comedy",
+      "class"
+    ]
   },
   {
     "description": "Dance class",
-    "tags": ["dance", "class"]
+    "tags": [
+      "dance",
+      "class"
+    ]
   },
   {
     "description": "Cooking class",
-    "tags": ["cooking", "class"]
+    "tags": [
+      "cooking",
+      "class"
+    ]
   },
   {
     "description": "Magic show",
-    "tags": ["show"]
+    "tags": [
+      "show"
+    ]
   },
   {
     "description": "Online classes",
-    "tags": ["online", "class"]
+    "tags": [
+      "online",
+      "class"
+    ]
   },
   {
     "description": "Photoshoot",
-    "tags": ["photos"]
+    "tags": [
+      "photos"
+    ]
   },
   {
     "description": "Puzzle",
-    "tags": ["collaborate", "puzzle"]
+    "tags": [
+      "collaborate",
+      "puzzle"
+    ]
   },
   {
     "description": "Draw",
-    "tags": ["art"]
+    "tags": [
+      "art"
+    ]
   },
   {
     "description": "Paint",
-    "tags": ["art"]
+    "tags": [
+      "art"
+    ]
   },
   {
     "description": "Make candles",
-    "tags": ["craft"]
+    "tags": [
+      "craft"
+    ]
   },
   {
     "description": "Make Tik-Tok videos together “Tik-tok date night challenge”",
-    "tags": ["videography", "social media", "collaborate"]
+    "tags": [
+      "videography",
+      "social media",
+      "collaborate"
+    ]
   },
   {
     "description": "Mystery night in (date night box)",
-    "tags": ["surprise", "at-home"]
+    "tags": [
+      "surprise",
+      "at-home"
+    ]
   },
   {
     "description": "Exercise together",
-    "tags": ["exercise"]
+    "tags": [
+      "exercise"
+    ]
   },
   {
     "description": "Turn off all lights for the night (I will probably break everything)",
-    "tags": ["quirky"]
+    "tags": [
+      "quirky"
+    ]
   },
   {
     "description": "Dance",
-    "tags": ["dance"]
+    "tags": [
+      "dance"
+    ]
   },
   {
     "description": "Blade & Timber Axe Throwing",
-    "tags": ["game", "shooting & throwing"]
+    "tags": [
+      "game",
+      "shooting & throwing"
+    ]
   },
   {
     "description": "Archery",
-    "tags": ["shooting & throwing"]
+    "tags": [
+      "shooting & throwing"
+    ]
   },
   {
     "description": "creativitea",
-    "tags": ["tea", "food & drink", "pottery", "art"]
+    "tags": [
+      "tea",
+      "food & drink",
+      "pottery",
+      "art"
+    ]
   },
   {
     "description": "Escape room",
-    "tags": ["puzzle", "collaborate"]
+    "tags": [
+      "puzzle",
+      "collaborate"
+    ]
   },
   {
     "description": "Indoor mini golf (flatstick)",
-    "tags": ["golf", "indoors"]
+    "tags": [
+      "golf",
+      "indoors"
+    ]
   },
   {
     "description": "Bar hopping",
-    "tags": ["drinking", "bar"]
+    "tags": [
+      "drinking",
+      "bar"
+    ]
   },
   {
     "description": "Fancy cocktails",
-    "tags": ["drinking", "bar", "cocktails"]
+    "tags": [
+      "drinking",
+      "bar",
+      "cocktails"
+    ]
   },
   {
     "description": "Dive bars",
-    "tags": ["drinking", "bar"]
+    "tags": [
+      "drinking",
+      "bar"
+    ]
   },
   {
     "description": "Cycle Saloon",
-    "tags": ["drinking", "tour"]
+    "tags": [
+      "drinking",
+      "tour"
+    ]
   },
   {
     "description": "Cornhole",
-    "tags": ["bar", "game"]
+    "tags": [
+      "bar",
+      "game"
+    ]
   },
   {
     "description": "Arcade games",
-    "tags": ["game", "arcade"]
+    "tags": [
+      "game",
+      "arcade"
+    ]
   },
   {
     "description": "Shuffleboard",
-    "tags": ["bar", "game"]
+    "tags": [
+      "bar",
+      "game"
+    ]
   },
   {
     "description": "Darts",
-    "tags": ["bar", "game"]
+    "tags": [
+      "bar",
+      "game"
+    ]
   },
   {
     "description": "Billiards",
-    "tags": ["bar", "game"]
+    "tags": [
+      "bar",
+      "game"
+    ]
   },
   {
     "description": "Bowling",
-    "tags": ["game", "competitive"]
+    "tags": [
+      "game",
+      "competitive"
+    ]
   },
   {
     "description": "Roller skating",
-    "tags": ["skate"]
+    "tags": [
+      "skate"
+    ]
   },
   {
     "description": "Ice skating",
-    "tags": ["skate"]
+    "tags": [
+      "skate"
+    ]
   },
   {
     "description": "Laser tag",
-    "tags": ["game", "competitive"]
+    "tags": [
+      "game",
+      "competitive"
+    ]
   },
   {
     "description": "Glass blowing",
-    "tags": ["art", "class"]
+    "tags": [
+      "art",
+      "class"
+    ]
   },
   {
     "description": "Blacksmithing",
-    "tags": ["art", "class"]
+    "tags": [
+      "art",
+      "class"
+    ]
   },
   {
     "description": "Painting",
-    "tags": ["art", "class"]
+    "tags": [
+      "art",
+      "class"
+    ]
   },
   {
     "description": "Sculpting",
-    "tags": ["art", "class"]
+    "tags": [
+      "art",
+      "class"
+    ]
   },
   {
     "description": "Drawing",
-    "tags": ["art", "class"]
+    "tags": [
+      "art",
+      "class"
+    ]
   },
   {
     "description": "Blind group cooking",
-    "tags": ["cooking", "fun"]
+    "tags": [
+      "cooking",
+      "fun"
+    ]
   },
   {
     "description": "Dancing",
-    "tags": ["dance", "class"]
+    "tags": [
+      "dance",
+      "class"
+    ]
   },
   {
     "description": "Improv comedy",
-    "tags": ["comedy", "class", "show"]
+    "tags": [
+      "comedy",
+      "class",
+      "show"
+    ]
   },
   {
     "description": "Cocktails",
-    "tags": ["DIY", "class", "bar"]
+    "tags": [
+      "DIY",
+      "class",
+      "bar"
+    ]
   },
   {
     "description": "Comedy show",
-    "tags": ["comedy", "show"]
+    "tags": [
+      "comedy",
+      "show"
+    ]
   },
   {
     "description": "Art Museum",
-    "tags": ["museum", "art", "indoors"]
+    "tags": [
+      "museum",
+      "art",
+      "indoors"
+    ]
   },
   {
     "description": "Science Museum",
-    "tags": ["museum", "science", "indoors"]
+    "tags": [
+      "museum",
+      "science",
+      "indoors"
+    ]
   },
   {
     "description": "MoPop",
-    "tags": ["museum", "pop-culture", "indoors"]
+    "tags": [
+      "museum",
+      "pop-culture",
+      "indoors"
+    ]
   },
   {
     "description": "Aquarium",
-    "tags": ["animals", "zoo"]
+    "tags": [
+      "animals",
+      "zoo"
+    ]
   },
   {
     "description": "Rock climbing",
-    "tags": ["exercise", "climbing", "indoors"]
+    "tags": [
+      "exercise",
+      "climbing",
+      "indoors"
+    ]
   },
   {
     "description": "Seattle CityPass",
-    "tags": ["variety", "tourist"]
+    "tags": [
+      "variety",
+      "tourist"
+    ]
   },
   {
     "description": "Wine tasting",
-    "tags": ["wine", "tasting"]
+    "tags": [
+      "wine",
+      "tasting"
+    ]
   },
   {
     "description": "Beer tasting",
-    "tags": ["beer", "tasting"]
+    "tags": [
+      "beer",
+      "tasting"
+    ]
   },
   {
     "description": "Cider tasting",
-    "tags": ["beer", "tasting"]
+    "tags": [
+      "beer",
+      "tasting"
+    ]
   },
   {
     "description": "Chef-guided tour",
-    "tags": ["guided tour", "food"]
+    "tags": [
+      "guided tour",
+      "food"
+    ]
   },
   {
     "description": "Drive-in movie",
-    "tags": ["movie"]
+    "tags": [
+      "movie"
+    ]
   },
   {
     "description": "Live music",
-    "tags": ["music", "concert", "live"]
+    "tags": [
+      "music",
+      "concert",
+      "live"
+    ]
   },
   {
     "description": "Karaoke",
-    "tags": ["music", "singing", "bar"]
+    "tags": [
+      "music",
+      "singing",
+      "bar"
+    ]
   },
   {
     "description": "Seoul bowl",
-    "tags": ["food", "korean"]
+    "tags": [
+      "food",
+      "korean"
+    ]
   },
   {
     "description": "Driving range",
-    "tags": ["golf", "outdoors"]
+    "tags": [
+      "golf",
+      "outdoors"
+    ]
   },
   {
     "description": "Mini golf",
-    "tags": ["golf", "outdoors", "indoors"]
+    "tags": [
+      "golf",
+      "outdoors",
+      "indoors"
+    ]
   },
   {
     "description": "Bocce ball",

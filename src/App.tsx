@@ -5,7 +5,9 @@ import queryString from "query-string";
 
 import history from 'history/browser';
 
-import React, { useState } from "react";
+import { saveAs } from 'file-saver';
+
+import React from "react";
 
 import TagsInput from 'react-tagsinput';
 import 'react-tagsinput/react-tagsinput.css';
@@ -227,7 +229,7 @@ class App extends React.Component<{}, IAppState> {
     function Activities(): JSX.Element {
       return (
         <div>
-          <span>Activities:</span>
+          <span>Results:</span>
           <ul className="activities">
             {searchResults
               .map(d => (
@@ -262,6 +264,7 @@ class App extends React.Component<{}, IAppState> {
     return (
       <div>
         <header>
+          <h1>Seattle Area Activities</h1>
           <div className="card">
             <div className="card-body">
               <SearchBar
@@ -290,6 +293,14 @@ class App extends React.Component<{}, IAppState> {
                 </button>
               </div>
             </div>
+          </div>
+          <div>
+          <button
+            type="button"
+            className="btn btn-primary btn-sm"
+            onClick={() => this.exportData()}>
+            Export Results
+          </button>
           </div>
           <Activities />
         </header>
@@ -352,6 +363,15 @@ class App extends React.Component<{}, IAppState> {
       searchDesc: searchDescriptions,
       searchTags: searchTags
     };
+  }
+
+  private exportData() {
+    const { searchResults } = this.state;
+
+    const serializedData = JSON.stringify(searchResults, undefined, 2);
+
+    const blob = new Blob([serializedData], {type: "application/json;charset=utf-8"});
+    saveAs(blob, "data.json");
   }
 }
 

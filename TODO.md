@@ -1,6 +1,8 @@
 High Pri.
 * Finish tagging everything
 
+Medium Pri.
+
 Low Pri.
 * Improve selected tags styling (input, autosuggest)
 * Add locations to activities?
@@ -11,6 +13,6 @@ Low Pri.
 * Refactor
 * Add tests
 * Add speech to text
-* Add data export
 * Add data editor
 * Build search index ahead of time
+* Search when adding/removing tags?
