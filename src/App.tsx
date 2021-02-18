@@ -14,6 +14,8 @@ import 'react-tagsinput/react-tagsinput.css';
 
 import Autosuggest from 'react-autosuggest';
 
+import { caseInsensitiveStrSortCompareFn, JSON_SPACES_IN_INDENT } from "./Utils";
+
 import data from "./data.json";
 
 import "./App.css";
@@ -23,10 +25,6 @@ const allTags = OrderedSet(
     .flatMap(d => d.tags)
     .sort(caseInsensitiveStrSortCompareFn)
 );
-
-function caseInsensitiveStrSortCompareFn(a: string, b: string): number {
-  return a.toLowerCase().localeCompare(b.toLowerCase());
-}
 
 interface IItem {
   description: string;
@@ -127,6 +125,29 @@ function SearchBar(
     </div>
   );
 }
+
+class SearchIndex {
+  public passesSearch(
+    item: IItem,
+    searchText: string,
+    searchDescriptions: boolean,
+    searchTags: boolean
+  ) {
+    return (searchText.length === 0) ||
+    (searchDescriptions && this.passesDescriptionSearch(item, searchText)) ||
+    (searchTags && this.passesTagSearch(item, searchText));
+  }
+  
+  public passesDescriptionSearch(item: IItem, searchText: string) {
+    return _.includes(item.description.toLowerCase(), searchText.toLowerCase());
+  }
+  
+  public passesTagSearch(item: IItem, searchText: string) {
+    return item.tags.some(t => _.includes(t.toLowerCase(), searchText.toLowerCase()));
+  }
+}
+
+const searchIndex = new SearchIndex();
 
 interface IAppState {
   searchText: string;
@@ -325,20 +346,9 @@ class App extends React.Component<{}, IAppState> {
       searchTags
     } = this.state;
 
-    function passesFilters(item: IItem) { return passesTags(item) && passesSearch(item); }
-  
-    function passesSearch(item: IItem) {
-      return (searchText.length === 0) ||
-      (searchDescriptions && passesDescriptionSearch(item)) ||
-      (searchTags && passesTagSearch(item));
-    }
-    
-    function passesDescriptionSearch(item: IItem) {
-      return _.includes(item.description.toLowerCase(), searchText.toLowerCase());
-    }
-    
-    function passesTagSearch(item: IItem) {
-      return item.tags.some(t => _.includes(t.toLowerCase(), searchText.toLowerCase()));
+    function passesFilters(item: IItem) {
+      return passesTags(item) &&
+        searchIndex.passesSearch(item, searchText, searchDescriptions, searchTags);
     }
   
     function passesTags(item: IItem) {
@@ -368,7 +378,7 @@ class App extends React.Component<{}, IAppState> {
   private exportData() {
     const { searchResults } = this.state;
 
-    const serializedData = JSON.stringify(searchResults, undefined, 2);
+    const serializedData = JSON.stringify(searchResults, undefined, JSON_SPACES_IN_INDENT);
 
     const blob = new Blob([serializedData], {type: "application/json;charset=utf-8"});
     saveAs(blob, "data.json");
