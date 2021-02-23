@@ -1,5 +1,6 @@
 High Pri.
 * Finish tagging everything
+* Change top level search logic from OR to AND?
 
 Medium Pri.
 

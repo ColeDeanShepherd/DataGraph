@@ -16,6 +16,9 @@ import Autosuggest from 'react-autosuggest';
 
 import { caseInsensitiveStrSortCompareFn, JSON_SPACES_IN_INDENT } from "./Utils";
 
+import { IItem } from "./IItem";
+import { SearchIndex } from "./SearchIndex";
+
 import data from "./data.json";
 
 import "./App.css";
@@ -25,11 +28,6 @@ const allTags = OrderedSet(
     .flatMap(d => d.tags)
     .sort(caseInsensitiveStrSortCompareFn)
 );
-
-interface IItem {
-  description: string;
-  tags: Array<string>;
-}
 
 function Tag(
   props: {
@@ -126,28 +124,7 @@ function SearchBar(
   );
 }
 
-class SearchIndex {
-  public passesSearch(
-    item: IItem,
-    searchText: string,
-    searchDescriptions: boolean,
-    searchTags: boolean
-  ) {
-    return (searchText.length === 0) ||
-    (searchDescriptions && this.passesDescriptionSearch(item, searchText)) ||
-    (searchTags && this.passesTagSearch(item, searchText));
-  }
-  
-  public passesDescriptionSearch(item: IItem, searchText: string) {
-    return _.includes(item.description.toLowerCase(), searchText.toLowerCase());
-  }
-  
-  public passesTagSearch(item: IItem, searchText: string) {
-    return item.tags.some(t => _.includes(t.toLowerCase(), searchText.toLowerCase()));
-  }
-}
-
-const searchIndex = new SearchIndex();
+const searchIndex = new SearchIndex(data);
 
 interface IAppState {
   searchText: string;
@@ -346,17 +323,14 @@ class App extends React.Component<{}, IAppState> {
       searchTags
     } = this.state;
 
-    function passesFilters(item: IItem) {
-      return passesTags(item) &&
-        searchIndex.passesSearch(item, searchText, searchDescriptions, searchTags);
-    }
+    const searchResults = searchIndex.search(searchText, searchDescriptions, searchTags);
   
     function passesTags(item: IItem) {
       return selectedTags.isEmpty() ||
         item.tags.some(t => selectedTags.contains(t));
     }
 
-    return data.filter(passesFilters);
+    return searchResults.filter(passesTags);
   }
 
   private getUriParams() {
