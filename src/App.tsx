@@ -21,6 +21,7 @@ import { SearchIndex } from "./SearchIndex";
 import data from "./data.json";
 
 import "./App.css";
+import { BlurConfirmInput } from "./BlurConfirmInput";
 
 function Tag(
   props: {
@@ -361,12 +362,12 @@ export class AppView extends React.Component<IAppViewProps, IAppViewState> {
             </div>
           </div>
           <div>
-          <button
-            type="button"
-            className="btn btn-primary btn-sm"
-            onClick={() => this.exportData()}>
-            Export Results
-          </button>
+            <button
+              type="button"
+              className="btn btn-primary btn-sm"
+              onClick={() => this.exportData()}>
+              Export Results
+            </button>
           </div>
           <Activities />
         </header>
@@ -376,23 +377,82 @@ export class AppView extends React.Component<IAppViewProps, IAppViewState> {
 
   private renderEditTab(): JSX.Element {
     return (
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Description</th>
-            <th>Tags</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {data.map((item: IItem) => (
+      <div>
+        <table className="table">
+          <thead>
             <tr>
-              <td>{item.description}</td>
-              <td>{JSON.stringify(item.tags)}</td>
+              <th>Description</th>
+              <th>Tags</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+
+          <tbody>
+            {data.map((item: IItem, itemIndex: number) => {
+              const onDescriptionChange = (newValue: string) => {
+                (data[itemIndex] as IItem).description = newValue;
+                this.forceUpdate();
+              };
+
+              const addTag = () => {};
+
+              return (
+                <tr>
+                  <td>
+                    <BlurConfirmInput value={item.description} onChange={onDescriptionChange} />
+                  </td>
+                  <td>
+                    <table className="table">
+                      <tbody>
+                        {item.tags.map((t: string, tagIndex: number) => {
+                          const onTagChange = (newValue: string) => {
+                            (data[itemIndex] as IItem).tags[tagIndex] = newValue;
+                            this.forceUpdate();
+                          };
+
+                          const removeTag = () => {
+                            (data[itemIndex] as IItem).tags.splice(tagIndex, 1);
+                            this.forceUpdate();
+                          };
+
+                          return (
+                            <tr>
+                              <td><BlurConfirmInput value={t} onChange={onTagChange} /></td>
+                              <td>
+                                <button
+                                  type="button"
+                                  className="btn btn-primary"
+                                  onClick={removeTag}>
+                                  x
+                                </button>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                        <tr>
+                          <td>
+                            <input
+                              type="text"
+                              value=""
+                              className="form-control" />
+                          </td>
+                          <td>
+                            <button
+                              type="button"
+                              className="btn btn-primary"
+                              onClick={addTag}>
+                              +
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
     );
   }
 

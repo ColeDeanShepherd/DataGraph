@@ -2,7 +2,12 @@ High Pri.
 * Finish tagging everything
 * Change top level search logic from OR to AND?
 * Make pressing enter search
-* Make edit page accessible by URL
+* Edit tab
+  * Actually make data editable
+    * Implement add tag
+  * Update search index when editing data
+  * Make accessible by URL
+  * Re-search when leaving
 
 Medium Pri.
 
@@ -21,3 +26,6 @@ Low Pri.
 * Add speech to text
 * Add data editor
 * Search when adding/removing tags?
+* BlurConfirmInput
+  * onChange optional
+  * handle value change
