@@ -117,6 +117,13 @@ function SearchBar(
   );
 }
 
+export enum AppTab {
+  Search,
+  Edit
+}
+
+export const allAppTabs = [AppTab.Search, AppTab.Edit];
+
 export class AppModel {
   public allTags: OrderedSet<string>;
   public searchIndex: SearchIndex;
@@ -136,6 +143,7 @@ export interface IAppViewProps {
 }
 
 export interface IAppViewState {
+  tab: AppTab;
   searchText: string;
   selectedTags: Set<string>;
   searchDescriptions: boolean;
@@ -155,6 +163,7 @@ export class AppView extends React.Component<IAppViewProps, IAppViewState> {
       : undefined;
 
     this.state = {
+      tab: AppTab.Search,
       searchText: (uriParams.q !== undefined) ? (uriParams.q as string) : "",
       selectedTags: (uriTags !== undefined) ? Set<string>(uriTags) : Set<string>(),
       searchDescriptions: (uriParams.searchDesc !== undefined) ? (uriParams.searchDesc === "true") : true,
@@ -167,7 +176,56 @@ export class AppView extends React.Component<IAppViewProps, IAppViewState> {
     this.doSearch();
   }
 
-  public render(): JSX.Element {
+  public render(): JSX.Element | null {
+    return (
+      <div>
+        {this.renderTabSelector()}
+        {this.renderCurrentTab()}
+      </div>
+    );
+  }
+
+  private renderTabSelector(): JSX.Element {
+    const { tab: currentTab } = this.state;
+
+    return (
+      <ul className="nav nav-tabs">
+        {allAppTabs.map(tab => {
+          const onClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+            this.setState({ tab: tab });
+
+            event.preventDefault();
+            event.stopPropagation();
+          };
+
+          return (
+            <li className="nav-item">
+              <a
+                className={"nav-link" + ((currentTab === tab) ? " active" : "")}
+                aria-current="page"
+                href="#"
+                onClick={onClick}>{AppTab[tab]}</a>
+            </li>
+          );
+        })}
+      </ul>
+    );
+  }
+
+  private renderCurrentTab(): JSX.Element | null {
+    const { tab } = this.state;
+
+    switch (tab) {
+      case AppTab.Search:
+        return this.renderSearchTab();
+      case AppTab.Edit:
+        return this.renderEditTab();
+      default:
+        return null;
+    }
+  }
+
+  private renderSearchTab(): JSX.Element {
     const { model } = this.props;
     const {
       searchText,
@@ -313,6 +371,28 @@ export class AppView extends React.Component<IAppViewProps, IAppViewState> {
           <Activities />
         </header>
       </div>
+    );
+  }
+
+  private renderEditTab(): JSX.Element {
+    return (
+      <table className="table">
+        <thead>
+          <tr>
+            <th>Description</th>
+            <th>Tags</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {data.map((item: IItem) => (
+            <tr>
+              <td>{item.description}</td>
+              <td>{JSON.stringify(item.tags)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     );
   }
 
