@@ -1,16 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-
-import App from './App';
+ 
+import { AppModel, AppView } from './App';
 import reportWebVitals from './reportWebVitals';
 
 import 'bootstrap/dist/css/bootstrap.css';
 
 import './index.css';
 
+const appModel = new AppModel();
+
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <AppView model={appModel} />
   </React.StrictMode>,
   document.getElementById('root')
 );

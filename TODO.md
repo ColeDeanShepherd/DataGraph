@@ -12,8 +12,9 @@ Low Pri.
 * Fuzzy search
 * Unique "key" props
 * Refactor
+  * Remove App component's dependency on window.location & history
+  * Constants for default state values?
 * Add tests
 * Add speech to text
 * Add data editor
-* Build search index ahead of time
 * Search when adding/removing tags?

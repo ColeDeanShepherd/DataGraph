@@ -1,5 +1,4 @@
 import { OrderedSet, Set } from "immutable";
-import * as _ from "lodash";
 
 import queryString from "query-string";
 
@@ -22,12 +21,6 @@ import { SearchIndex } from "./SearchIndex";
 import data from "./data.json";
 
 import "./App.css";
-
-const allTags = OrderedSet(
-  data
-    .flatMap(d => d.tags)
-    .sort(caseInsensitiveStrSortCompareFn)
-);
 
 function Tag(
   props: {
@@ -124,9 +117,25 @@ function SearchBar(
   );
 }
 
-const searchIndex = new SearchIndex(data);
+export class AppModel {
+  public allTags: OrderedSet<string>;
+  public searchIndex: SearchIndex;
 
-interface IAppState {
+  public constructor() {
+    this.allTags = OrderedSet(
+      data
+        .flatMap(d => d.tags)
+        .sort(caseInsensitiveStrSortCompareFn)
+    );
+    this.searchIndex = new SearchIndex(data);
+  }
+}
+
+export interface IAppViewProps {
+  model: AppModel;
+}
+
+export interface IAppViewState {
   searchText: string;
   selectedTags: Set<string>;
   searchDescriptions: boolean;
@@ -134,8 +143,8 @@ interface IAppState {
   searchResults: Array<IItem>;
 }
 
-class App extends React.Component<{}, IAppState> {
-  public constructor(props: {}) {
+export class AppView extends React.Component<IAppViewProps, IAppViewState> {
+  public constructor(props: IAppViewProps) {
     super(props);
 
     const uriParams = queryString.parse(history.location.search);
@@ -159,6 +168,7 @@ class App extends React.Component<{}, IAppState> {
   }
 
   public render(): JSX.Element {
+    const { model } = this.props;
     const {
       searchText,
       selectedTags,
@@ -211,7 +221,7 @@ class App extends React.Component<{}, IAppState> {
       );
     }
   
-    const getAvailableTags = () => allTags.subtract(selectedTags);
+    const getAvailableTags = () => model.allTags.subtract(selectedTags);
   
     function AvailableTags(): JSX.Element {
       return (
@@ -316,6 +326,7 @@ class App extends React.Component<{}, IAppState> {
   }
   
   private getSearchResults() {
+    const { model } = this.props;
     const {
       searchText,
       selectedTags,
@@ -323,7 +334,7 @@ class App extends React.Component<{}, IAppState> {
       searchTags
     } = this.state;
 
-    const searchResults = searchIndex.search(searchText, searchDescriptions, searchTags);
+    const searchResults = model.searchIndex.search(searchText, searchDescriptions, searchTags);
   
     function passesTags(item: IItem) {
       return selectedTags.isEmpty() ||
@@ -358,5 +369,3 @@ class App extends React.Component<{}, IAppState> {
     saveAs(blob, "data.json");
   }
 }
-
-export default App;
