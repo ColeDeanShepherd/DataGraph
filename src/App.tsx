@@ -128,7 +128,8 @@ export const allAppTabs = [AppTab.Search, AppTab.Edit];
 export class AppModel {
   public allTags: OrderedSet<string>;
   public searchIndex: SearchIndex;
-  public newTags: Array<string>
+  public newTags: Array<string>;
+  public newItemDescription: string;
 
   public constructor() {
     this.allTags = OrderedSet(
@@ -138,6 +139,7 @@ export class AppModel {
     );
     this.searchIndex = new SearchIndex(data);
     this.newTags = data.map(x => "");
+    this.newItemDescription = "";
   }
 }
 
@@ -380,6 +382,25 @@ export class AppView extends React.Component<IAppViewProps, IAppViewState> {
   private renderEditTab(): JSX.Element {
     const { model } = this.props;
 
+    const onNewItemDescriptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      model.newItemDescription = event.target.value;
+      this.forceUpdate();
+    };
+    
+    const addItem = () => {
+      if (!canAddItem()) { return; }
+
+      data.push({
+        description: model.newItemDescription,
+        tags: []
+      } as IItem);
+      model.newItemDescription = "";
+      model.newTags.push("");
+      this.forceUpdate();
+    };
+
+    const canAddItem = () => model.newItemDescription.length > 0;
+
     return (
       <div>
         <table className="table">
@@ -387,6 +408,7 @@ export class AppView extends React.Component<IAppViewProps, IAppViewState> {
             <tr>
               <th>Description</th>
               <th>Tags</th>
+              <th></th>
             </tr>
           </thead>
 
@@ -412,6 +434,13 @@ export class AppView extends React.Component<IAppViewProps, IAppViewState> {
               };
 
               const canAddTag = () => model.newTags[itemIndex].length > 0;
+              
+              const removeItem = () => {
+                data.splice(itemIndex, 1);
+                model.newTags.splice(itemIndex, 1);
+
+                this.forceUpdate();
+              };
 
               return (
                 <tr>
@@ -467,9 +496,36 @@ export class AppView extends React.Component<IAppViewProps, IAppViewState> {
                       </tbody>
                     </table>
                   </td>
+                  <td>
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      onClick={removeItem}>
+                      x
+                    </button>
+                  </td>
                 </tr>
               );
             })}
+            <tr>
+              <td>
+                <input
+                  type="text"
+                  value={model.newItemDescription}
+                  onChange={onNewItemDescriptionChange}
+                  className="form-control" />
+              </td>
+              <td></td>
+              <td>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={addItem}
+                  disabled={!canAddItem()}>
+                  +
+                </button>
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>

@@ -8,6 +8,7 @@ High Pri.
   * Update search index when editing data
   * Make accessible by URL
   * Re-search when leaving
+  * Description & tag validation (can't be empty! can't be duplicate tag!)
 
 Medium Pri.
 
@@ -22,6 +23,7 @@ Low Pri.
   * Remove App component's dependency on window.location & history
   * Constants for default state values?
   * Flatten App render function (componentize)
+  * splices
 * Add tests
 * Add speech to text
 * Add data editor
