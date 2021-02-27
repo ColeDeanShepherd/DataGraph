@@ -4,7 +4,7 @@ High Pri.
 * Make pressing enter search
 * Edit tab
   * Actually make data editable
-    * Implement add tag
+    * Implement add/remove item
   * Update search index when editing data
   * Make accessible by URL
   * Re-search when leaving

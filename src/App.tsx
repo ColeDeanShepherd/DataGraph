@@ -128,6 +128,7 @@ export const allAppTabs = [AppTab.Search, AppTab.Edit];
 export class AppModel {
   public allTags: OrderedSet<string>;
   public searchIndex: SearchIndex;
+  public newTags: Array<string>
 
   public constructor() {
     this.allTags = OrderedSet(
@@ -136,6 +137,7 @@ export class AppModel {
         .sort(caseInsensitiveStrSortCompareFn)
     );
     this.searchIndex = new SearchIndex(data);
+    this.newTags = data.map(x => "");
   }
 }
 
@@ -376,6 +378,8 @@ export class AppView extends React.Component<IAppViewProps, IAppViewState> {
   }
 
   private renderEditTab(): JSX.Element {
+    const { model } = this.props;
+
     return (
       <div>
         <table className="table">
@@ -393,7 +397,21 @@ export class AppView extends React.Component<IAppViewProps, IAppViewState> {
                 this.forceUpdate();
               };
 
-              const addTag = () => {};
+              const onNewTagChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+                model.newTags[itemIndex] = e.target.value;
+                this.forceUpdate();
+              };
+
+              const addTag = () => {
+                if (!canAddTag()) { return; }
+
+                const newTag = model.newTags[itemIndex];
+                data[itemIndex].tags.push(newTag);
+                model.newTags[itemIndex] = "";
+                this.forceUpdate();
+              };
+
+              const canAddTag = () => model.newTags[itemIndex].length > 0;
 
               return (
                 <tr>
@@ -432,14 +450,16 @@ export class AppView extends React.Component<IAppViewProps, IAppViewState> {
                           <td>
                             <input
                               type="text"
-                              value=""
+                              value={model.newTags[itemIndex]}
+                              onChange={onNewTagChange}
                               className="form-control" />
                           </td>
                           <td>
                             <button
                               type="button"
                               className="btn btn-primary"
-                              onClick={addTag}>
+                              onClick={addTag}
+                              disabled={!canAddTag()}>
                               +
                             </button>
                           </td>
