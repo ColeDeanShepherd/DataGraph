@@ -18,8 +18,6 @@ import { caseInsensitiveStrSortCompareFn, JSON_SPACES_IN_INDENT } from "./Utils"
 import { IItem } from "./IItem";
 import { SearchIndex } from "./SearchIndex";
 
-import data from "./data.json";
-
 import "./App.css";
 import { BlurConfirmInput } from "./BlurConfirmInput";
 
@@ -126,20 +124,30 @@ export enum AppTab {
 export const allAppTabs = [AppTab.Search, AppTab.Edit];
 
 export class AppModel {
+  public data: Array<IItem>;
   public allTags: OrderedSet<string>;
   public searchIndex: SearchIndex;
   public newTags: Array<string>;
   public newItemDescription: string;
 
-  public constructor() {
+  public constructor(data: Array<IItem>) {
+    this.data = data;
     this.allTags = OrderedSet(
-      data
+      this.data
         .flatMap(d => d.tags)
         .sort(caseInsensitiveStrSortCompareFn)
     );
-    this.searchIndex = new SearchIndex(data);
-    this.newTags = data.map(x => "");
+    this.searchIndex = new SearchIndex(this.data);
+    this.newTags = this.data.map(x => "");
     this.newItemDescription = "";
+  }
+
+  public canAddItem(): boolean {
+    return this.newItemDescription.length > 0;
+  }
+
+  public canAddTag(itemIndex: number): boolean {
+    return this.newTags[itemIndex].length > 0;
   }
 }
 
@@ -154,6 +162,72 @@ export interface IAppViewState {
   searchDescriptions: boolean;
   searchTags: boolean;
   searchResults: Array<IItem>;
+}
+
+function exportSearchResults(searchResults: Array<IItem>) {
+  const serializedData = JSON.stringify(searchResults, undefined, JSON_SPACES_IN_INDENT);
+
+  const blob = new Blob([serializedData], {type: "application/json;charset=utf-8"});
+  saveAs(blob, "data.json");
+}
+
+//#region Actions
+
+function runNewItemDescriptionChangeAction(model: AppModel, newValue: string) {
+  model.newItemDescription = newValue;
+}
+
+function runAddItemAction(model: AppModel) {
+  if (!model.canAddItem()) { return; }
+
+  model.data.push({
+    description: model.newItemDescription,
+    tags: []
+  } as IItem);
+  model.newItemDescription = "";
+  model.newTags.push("");
+}
+
+function runItemDescriptionChangeAction(model: AppModel, itemIndex: number, newValue: string) {
+  model.data[itemIndex].description = newValue;
+}
+
+function runRemoveItemAction(model: AppModel, itemIndex: number) {
+  model.data.splice(itemIndex, 1);
+  model.newTags.splice(itemIndex, 1);
+}
+
+function runNewItemTagChangeAction(model: AppModel, itemIndex: number, newValue: string) {
+  model.newTags[itemIndex] = newValue;
+}
+
+function runAddTagAction(model: AppModel, itemIndex: number) {
+  if (!model.canAddTag(itemIndex)) { return; }
+
+  const newTag = model.newTags[itemIndex];
+  model.data[itemIndex].tags.push(newTag);
+  model.newTags[itemIndex] = "";
+}
+
+function runItemTagChangeAction(model: AppModel, itemIndex: number, tagIndex: number, newValue: string) {
+  model.data[itemIndex].tags[tagIndex] = newValue;
+}
+
+function runRemoveTagAction(model: AppModel, itemIndex: number, tagIndex: number) {
+  model.data[itemIndex].tags.splice(tagIndex, 1);
+}
+
+function runSearchAction(model: AppModel) {
+
+}
+
+//#endregion
+
+interface IUriParams {
+  q: string;
+  t: Array<string>;
+  searchDesc: boolean;
+  searchTags: boolean;
 }
 
 export class AppView extends React.Component<IAppViewProps, IAppViewState> {
@@ -369,7 +443,7 @@ export class AppView extends React.Component<IAppViewProps, IAppViewState> {
             <button
               type="button"
               className="btn btn-primary btn-sm"
-              onClick={() => this.exportData()}>
+              onClick={() => exportSearchResults(searchResults)}>
               Export Results
             </button>
           </div>
@@ -383,23 +457,14 @@ export class AppView extends React.Component<IAppViewProps, IAppViewState> {
     const { model } = this.props;
 
     const onNewItemDescriptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      model.newItemDescription = event.target.value;
+      runNewItemDescriptionChangeAction(model, event.target.value);
       this.forceUpdate();
     };
     
     const addItem = () => {
-      if (!canAddItem()) { return; }
-
-      data.push({
-        description: model.newItemDescription,
-        tags: []
-      } as IItem);
-      model.newItemDescription = "";
-      model.newTags.push("");
+      runAddItemAction(model);
       this.forceUpdate();
     };
-
-    const canAddItem = () => model.newItemDescription.length > 0;
 
     return (
       <div>
@@ -413,32 +478,24 @@ export class AppView extends React.Component<IAppViewProps, IAppViewState> {
           </thead>
 
           <tbody>
-            {data.map((item: IItem, itemIndex: number) => {
+            {model.data.map((item: IItem, itemIndex: number) => {
               const onDescriptionChange = (newValue: string) => {
-                (data[itemIndex] as IItem).description = newValue;
+                runItemDescriptionChangeAction(model, itemIndex, newValue);
                 this.forceUpdate();
               };
 
               const onNewTagChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-                model.newTags[itemIndex] = e.target.value;
+                runNewItemTagChangeAction(model, itemIndex, e.target.value);
                 this.forceUpdate();
               };
 
               const addTag = () => {
-                if (!canAddTag()) { return; }
-
-                const newTag = model.newTags[itemIndex];
-                data[itemIndex].tags.push(newTag);
-                model.newTags[itemIndex] = "";
+                runAddTagAction(model, itemIndex);
                 this.forceUpdate();
               };
-
-              const canAddTag = () => model.newTags[itemIndex].length > 0;
               
               const removeItem = () => {
-                data.splice(itemIndex, 1);
-                model.newTags.splice(itemIndex, 1);
-
+                runRemoveItemAction(model, itemIndex);
                 this.forceUpdate();
               };
 
@@ -452,12 +509,12 @@ export class AppView extends React.Component<IAppViewProps, IAppViewState> {
                       <tbody>
                         {item.tags.map((t: string, tagIndex: number) => {
                           const onTagChange = (newValue: string) => {
-                            (data[itemIndex] as IItem).tags[tagIndex] = newValue;
+                            runItemTagChangeAction(model, itemIndex, tagIndex, newValue);
                             this.forceUpdate();
                           };
 
                           const removeTag = () => {
-                            (data[itemIndex] as IItem).tags.splice(tagIndex, 1);
+                            runRemoveTagAction(model, itemIndex, tagIndex);
                             this.forceUpdate();
                           };
 
@@ -488,7 +545,7 @@ export class AppView extends React.Component<IAppViewProps, IAppViewState> {
                               type="button"
                               className="btn btn-primary"
                               onClick={addTag}
-                              disabled={!canAddTag()}>
+                              disabled={!model.canAddTag(itemIndex)}>
                               +
                             </button>
                           </td>
@@ -521,7 +578,7 @@ export class AppView extends React.Component<IAppViewProps, IAppViewState> {
                   type="button"
                   className="btn btn-primary"
                   onClick={addItem}
-                  disabled={!canAddItem()}>
+                  disabled={!model.canAddItem()}>
                   +
                 </button>
               </td>
@@ -533,9 +590,13 @@ export class AppView extends React.Component<IAppViewProps, IAppViewState> {
   }
 
   private doSearch() {
+    const { model } = this.props;
+    
+    runSearchAction(model);
+
     this.setState({ searchResults: this.getSearchResults() });
 
-    const uriParams = this.getUriParams();
+    const uriParams = this.getUriParamsFromState();
     history.push({
       search: '?' + queryString.stringify(uriParams)
     })
@@ -560,7 +621,7 @@ export class AppView extends React.Component<IAppViewProps, IAppViewState> {
     return searchResults.filter(passesTags);
   }
 
-  private getUriParams() {
+  private getUriParamsFromState(): IUriParams {
     const {
       searchText,
       selectedTags,
@@ -574,14 +635,5 @@ export class AppView extends React.Component<IAppViewProps, IAppViewState> {
       searchDesc: searchDescriptions,
       searchTags: searchTags
     };
-  }
-
-  private exportData() {
-    const { searchResults } = this.state;
-
-    const serializedData = JSON.stringify(searchResults, undefined, JSON_SPACES_IN_INDENT);
-
-    const blob = new Blob([serializedData], {type: "application/json;charset=utf-8"});
-    saveAs(blob, "data.json");
   }
 }

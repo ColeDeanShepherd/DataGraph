@@ -1,14 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
- 
-import { AppModel, AppView } from './App';
 import reportWebVitals from './reportWebVitals';
+
+import { AppModel, AppView } from './App';
+import * as dataFileContents from './data.json';
 
 import 'bootstrap/dist/css/bootstrap.css';
 
 import './index.css';
 
-const appModel = new AppModel();
+const appModel = new AppModel(dataFileContents);
 
 ReactDOM.render(
   <React.StrictMode>
